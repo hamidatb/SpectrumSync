@@ -2,18 +2,19 @@
 
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const { CosmosClient } = require('@azure/cosmos');
+const sql = require('mssql');
 const User = require('../models/User');
 require('dotenv').config();
 
-// Initialize Cosmos DB client
-const client = new CosmosClient({
-    endpoint: process.env.COSMOS_DB_ENDPOINT,
-    key: process.env.COSMOS_DB_KEY
-});
-
-const database = client.database(process.env.COSMOS_DB_DATABASE);
-const container = database.container(process.env.COSMOS_DB_CONTAINER);
+// Configure SQL Server connection
+// These are in the .env
+const config = {
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    server: process.env.DB_SERVER, 
+    database: process.env.DB_DATABASE,
+    port: parseInt(process.env.DB_PORT, 10),
+};
 
 // Register a new user
 exports.register = async (req, res) => {
@@ -25,12 +26,12 @@ exports.register = async (req, res) => {
     }
 
     try {
-        // Check if user already exists
-        const { resources } = await container.items
-            .query(`SELECT * FROM Users u WHERE u.email = "${email}"`)
-            .fetchAll();
+        // Connect to the database
+        await sql.connect(config);
 
-        if (resources.length > 0) {
+        // Check if user already exists
+        const result = await sql.query`SELECT * FROM Users WHERE email = ${email}`;
+        if (result.recordset.length > 0) {
             return res.status(400).json({ message: 'User already exists' });
         }
 
@@ -38,23 +39,33 @@ exports.register = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Create new user
-        const newUser = new User(`${Date.now()}`, username, email, hashedPassword);
-        await container.items.create(newUser);
+        // Insert new user
+        const insertResult = await sql.query`
+            INSERT INTO Users (username, email, password)
+            VALUES (${username}, ${email}, ${hashedPassword})
+        `;
+
+        // Retrieve the inserted user
+        const userResult = await sql.query`SELECT * FROM Users WHERE email = ${email}`;
+        const user = userResult.recordset[0];
 
         // Create JWT token
-        const token = jwt.sign({ id: newUser.id }, process.env.JWT_SECRET, { expiresIn: 3600 });
+        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         res.status(201).json({
             token,
             user: {
-                id: newUser.id,
-                username: newUser.username,
-                email: newUser.email
-            }
+                id: user.id,
+                username: user.username,
+                email: user.email,
+            },
         });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Error during registration:', error);
+        res.status(500).json({ message: 'Server error' });
+    } finally {
+        // Close the SQL connection
+        await sql.close();
     }
 };
 
@@ -68,33 +79,37 @@ exports.login = async (req, res) => {
     }
 
     try {
-        // Find user by email
-        const { resources } = await container.items
-            .query(`SELECT * FROM Users u WHERE u.email = "${email}"`)
-            .fetchAll();
+        // Connect to the database
+        await sql.connect(config);
 
-        if (resources.length === 0) {
+        // Find user by email
+        const result = await sql.query`SELECT * FROM Users WHERE email = ${email}`;
+        if (result.recordset.length === 0) {
             return res.status(400).json({ message: 'User does not exist' });
         }
 
-        const user = resources[0];
+        const user = result.recordset[0];
 
         // Compare password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
 
         // Create JWT token
-        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: 3600 });
+        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         res.json({
             token,
             user: {
                 id: user.id,
                 username: user.username,
-                email: user.email
-            }
+                email: user.email,
+            },
         });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Error during login:', error);
+        res.status(500).json({ message: 'Server error' });
+    } finally {
+        // Close the SQL connection
+        await sql.close();
     }
 };
