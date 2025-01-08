@@ -42,8 +42,6 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write #This is required for requesting the JWT
 
     steps:
       - name: Download artifact from build job
@@ -53,19 +51,10 @@ jobs:
 
       - name: Unzip artifact for deployment
         run: unzip release.zip
-      
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_F8DB1B43381B41B49F8455FAD1EE3C67 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_36024B5D4A2742EFBBD2F36218C691AF }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C76F4711EFA749F88525C895B0009990 }}
-         
-      - name: 'Deploy to Azure Web App'
-        id: deploy-to-webapp
+
+      - name: Deploy to Azure Web App using Publish Profile
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'spectrum-sync-backend'
-          slot-name: 'Production'
-          package: .
-          
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: release.zip

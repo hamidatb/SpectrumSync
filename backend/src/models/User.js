@@ -1,4 +1,4 @@
-// src/models/User.js
+// src/models/User.js 
 
 class User {
     constructor(id, username, email, password, created_at) {
