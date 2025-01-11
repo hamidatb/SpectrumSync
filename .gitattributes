@@ -1,2 +1,3 @@
 # frontend is managed entirely by swift
 *.swift linguist-detectable=true
+*.swift linguist-language=Swift
