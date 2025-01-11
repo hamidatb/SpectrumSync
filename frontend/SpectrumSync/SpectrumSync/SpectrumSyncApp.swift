@@ -1,17 +1,20 @@
-//
-//  SpectrumSyncApp.swift
-//  SpectrumSync
-//
-//  Created by Hamidat Bello on 2025-01-10.
-//
+// SpectrumSync/SpectrumSyncApp.swift
 
 import SwiftUI
 
 @main
 struct SpectrumSyncApp: App {
+    @StateObject var authViewModel = AuthViewModel()
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if authViewModel.isAuthenticated {
+                HomeView()
+                    .environmentObject(authViewModel)
+            } else {
+                SplashView()
+                    .environmentObject(authViewModel)
+            }
         }
     }
 }
