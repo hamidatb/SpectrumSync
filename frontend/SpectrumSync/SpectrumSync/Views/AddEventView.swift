@@ -1,16 +1,13 @@
-// SpectrumSync/Views/AddEventView.swift
-
+// Views/AddEventView.swift
 import SwiftUI
 
 struct AddEventView: View {
-    @ObservedObject var eventViewModel: EventViewModel
-    @Environment(\.presentationMode) var presentationMode
-
-    @State private var title: String = ""
-    @State private var description: String = ""
-    @State private var date: Date = Date()
-    @State private var location: String = ""
-
+    @ObservedObject var eventVM: EventViewModel
+    @State private var title = ""
+    @State private var description = ""
+    @State private var date = Date()
+    @State private var location = ""
+    
     var body: some View {
         Form {
             Section(header: Text("Event Details")) {
@@ -19,25 +16,19 @@ struct AddEventView: View {
                 DatePicker("Date", selection: $date, displayedComponents: .date)
                 TextField("Location", text: $location)
             }
-
-            Button(action: {
-                let formatter = DateFormatter()
-                formatter.dateFormat = "yyyy-MM-dd"
+            Button("Create Event") {
+                let formatter = ISO8601DateFormatter()
                 let dateString = formatter.string(from: date)
-
-                eventViewModel.createEvent(title: title, description: description, date: dateString, location: location)
-                presentationMode.wrappedValue.dismiss()
-            }) {
-                Text("Add Event")
-                    .frame(maxWidth: .infinity, alignment: .center)
+                eventVM.createEvent(title: title, description: description, date: dateString, location: location)
             }
+            .padding()
         }
-        .navigationTitle("Add New Event")
+        .navigationTitle("Add Event")
     }
 }
 
 struct AddEventView_Previews: PreviewProvider {
     static var previews: some View {
-        AddEventView(eventViewModel: EventViewModel(token: ""))
+        AddEventView(eventVM: EventViewModel())
     }
 }

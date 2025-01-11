@@ -1,108 +1,229 @@
-// SpectrumSync/ViewModels/EventViewModel.swift
-
+// ViewModels/EventViewModel.swift
 import Foundation
 import Combine
 
-// Custom struct to wrap error messages and make them Identifiable
-struct IdentifiableError: Identifiable {
-    let id = UUID()  // Unique identifier for each error
-    let message: String
-}
-
-class EventViewModel: ObservableObject {
+/// ViewModel for handling event-related actions.
+final class EventViewModel: ObservableObject {
     @Published var events: [Event] = []
-    @Published var errorMessage: IdentifiableError?  // Use the custom struct instead of String
-
-    private let baseURL = "https://spectrum-sync-backend.azurewebsites.net/api/events"
-    private var token: String
-
-    init(token: String) {
+    @Published var invites: [Event] = []  // Assuming event invitations are returned as events.
+    @Published var errorMessage: String?
+    
+    private let eventBaseURL = "https://your-backend-url.com/api/events"
+    private var token: String?
+    
+    /// Sets the authentication token.
+    func setToken(_ token: String) {
         self.token = token
-        fetchEvents()
     }
-
-    // Fetch Events
-    func fetchEvents() {
-        guard let url = URL(string: baseURL) else {
-            print("Invalid URL")
+    
+    /// Fetches event invitations for the authenticated user.
+    func getInvites() {
+        guard let url = URL(string: "\(eventBaseURL)/invites") else {
+            self.errorMessage = "Invalid URL."
             return
         }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    self.errorMessage = IdentifiableError(message: error.localizedDescription)
-                    return
-                }
-
-                guard let data = data else {
-                    self.errorMessage = IdentifiableError(message: "No data received")
-                    return
-                }
-
-                do {
-                    let decodedEvents = try JSONDecoder().decode([Event].self, from: data)
-                    self.events = decodedEvents
-                } catch {
-                    self.errorMessage = IdentifiableError(message: "Failed to fetch events: \(error.localizedDescription)")
-                }
+        var headers = [String: String]()
+        if let token = token { headers["Authorization"] = "Bearer \(token)" }
+        
+        NetworkManager.shared.request(url: url,
+                                      method: .get,
+                                      headers: headers,
+                                      body: nil) { (result: Result<[Event], APIError>) in
+            switch result {
+            case .success(let invites):
+                self.invites = invites
+            case .failure(let error):
+                self.errorMessage = error.localizedDescription
             }
-        }.resume()
+        }
     }
-
-    // Create Event
+    
+    /// Creates a new event.
     func createEvent(title: String, description: String?, date: String, location: String) {
-        guard let url = URL(string: baseURL) else {
-            print("Invalid URL")
+        guard let url = URL(string: "\(eventBaseURL)") else {
+            self.errorMessage = "Invalid URL."
             return
         }
-
         let parameters: [String: Any] = [
             "title": title,
             "description": description ?? "",
             "date": date,
             "location": location
         ]
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
-
-        do {
-            request.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: [])
-        } catch {
-            print("Error serializing JSON:", error)
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: parameters) else {
+            self.errorMessage = "Invalid parameters."
             return
         }
-
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    self.errorMessage = IdentifiableError(message: error.localizedDescription)
-                    return
-                }
-
-                guard let data = data else {
-                    self.errorMessage = IdentifiableError(message: "No data received")
-                    return
-                }
-
-                do {
-                    // Assuming the backend returns a success message
-                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
-                       let message = json["message"] as? String {
-                        print(message)
-                        self.fetchEvents() // Refresh events
-                    }
-                } catch {
-                    self.errorMessage = IdentifiableError(message: "Failed to create event: \(error.localizedDescription)")
-                }
+        var headers = ["Content-Type": "application/json"]
+        if let token = token { headers["Authorization"] = "Bearer \(token)" }
+        
+        NetworkManager.shared.request(url: url,
+                                      method: .post,
+                                      headers: headers,
+                                      body: jsonData) { (result: Result<[String: String], APIError>) in
+            switch result {
+            case .success(let response):
+                print("Event created: \(response)")
+                self.getEvents() // Refresh events after creation.
+            case .failure(let error):
+                self.errorMessage = error.localizedDescription
             }
-        }.resume()
+        }
+    }
+    
+    /// Retrieves all events for the authenticated user.
+    func getEvents() {
+        guard let url = URL(string: "\(eventBaseURL)") else {
+            self.errorMessage = "Invalid URL."
+            return
+        }
+        var headers = [String: String]()
+        if let token = token { headers["Authorization"] = "Bearer \(token)" }
+        
+        NetworkManager.shared.request(url: url,
+                                      method: .get,
+                                      headers: headers,
+                                      body: nil) { (result: Result<[Event], APIError>) in
+            switch result {
+            case .success(let events):
+                self.events = events
+            case .failure(let error):
+                self.errorMessage = error.localizedDescription
+            }
+        }
+    }
+    
+    /// Retrieves an event by its ID.
+    func getEventById(eventId: Int, completion: @escaping (Event?) -> Void) {
+        guard let url = URL(string: "\(eventBaseURL)/\(eventId)") else {
+            self.errorMessage = "Invalid URL."
+            completion(nil)
+            return
+        }
+        var headers = [String: String]()
+        if let token = token { headers["Authorization"] = "Bearer \(token)" }
+        
+        NetworkManager.shared.request(url: url,
+                                      method: .get,
+                                      headers: headers,
+                                      body: nil) { (result: Result<Event, APIError>) in
+            switch result {
+            case .success(let event):
+                completion(event)
+            case .failure(let error):
+                self.errorMessage = error.localizedDescription
+                completion(nil)
+            }
+        }
+    }
+    
+    /// Updates an event by its ID.
+    func updateEvent(eventId: Int, title: String, description: String?, date: String, location: String) {
+        guard let url = URL(string: "\(eventBaseURL)/\(eventId)") else {
+            self.errorMessage = "Invalid URL."
+            return
+        }
+        let parameters: [String: Any] = [
+            "title": title,
+            "description": description ?? "",
+            "date": date,
+            "location": location
+        ]
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: parameters) else {
+            self.errorMessage = "Invalid parameters."
+            return
+        }
+        var headers = ["Content-Type": "application/json"]
+        if let token = token { headers["Authorization"] = "Bearer \(token)" }
+        
+        NetworkManager.shared.request(url: url,
+                                      method: .put,
+                                      headers: headers,
+                                      body: jsonData) { (result: Result<[String: String], APIError>) in
+            switch result {
+            case .success(let response):
+                print("Event updated: \(response)")
+                self.getEvents()
+            case .failure(let error):
+                self.errorMessage = error.localizedDescription
+            }
+        }
+    }
+    
+    /// Deletes an event by its ID.
+    func deleteEvent(eventId: Int) {
+        guard let url = URL(string: "\(eventBaseURL)/\(eventId)") else {
+            self.errorMessage = "Invalid URL."
+            return
+        }
+        var headers = [String: String]()
+        if let token = token { headers["Authorization"] = "Bearer \(token)" }
+        
+        NetworkManager.shared.request(url: url,
+                                      method: .delete,
+                                      headers: headers,
+                                      body: nil) { (result: Result<[String: String], APIError>) in
+            switch result {
+            case .success(let response):
+                print("Event deleted: \(response)")
+                self.getEvents()
+            case .failure(let error):
+                self.errorMessage = error.localizedDescription
+            }
+        }
+    }
+    
+    /// Shares an event by its ID with a specified email.
+    func shareEvent(eventId: Int, email: String) {
+        guard let url = URL(string: "\(eventBaseURL)/\(eventId)/share") else {
+            self.errorMessage = "Invalid URL."
+            return
+        }
+        let parameters: [String: Any] = ["email": email]
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: parameters) else {
+            self.errorMessage = "Invalid parameters."
+            return
+        }
+        var headers = ["Content-Type": "application/json"]
+        if let token = token { headers["Authorization"] = "Bearer \(token)" }
+        
+        NetworkManager.shared.request(url: url,
+                                      method: .post,
+                                      headers: headers,
+                                      body: jsonData) { (result: Result<[String: String], APIError>) in
+            switch result {
+            case .success(let response):
+                print("Event shared: \(response)")
+            case .failure(let error):
+                self.errorMessage = error.localizedDescription
+            }
+        }
+    }
+    
+    /// Sends an RSVP status for an event.
+    func attendEvent(eventId: Int, status: String) {
+        guard let url = URL(string: "\(eventBaseURL)/\(eventId)/attend") else {
+            self.errorMessage = "Invalid URL."
+            return
+        }
+        let parameters: [String: Any] = ["status": status]
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: parameters) else {
+            self.errorMessage = "Invalid parameters."
+            return
+        }
+        var headers = ["Content-Type": "application/json"]
+        if let token = token { headers["Authorization"] = "Bearer \(token)" }
+        
+        NetworkManager.shared.request(url: url,
+                                      method: .post,
+                                      headers: headers,
+                                      body: jsonData) { (result: Result<[String: String], APIError>) in
+            switch result {
+            case .success(let response):
+                print("RSVP successful: \(response)")
+            case .failure(let error):
+                self.errorMessage = error.localizedDescription
+            }
+        }
     }
 }

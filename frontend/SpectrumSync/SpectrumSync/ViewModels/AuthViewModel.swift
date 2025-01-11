@@ -1,104 +1,113 @@
-// SpectrumSync/ViewModels/AuthViewModel.swift
-
+// ViewModels/AuthViewModel.swift
 import Foundation
 import Combine
 
-class AuthViewModel: ObservableObject {
-    @Published var user: User?
+/// ViewModel for handling authentication actions.
+final class AuthViewModel: ObservableObject {
+    
+    // Published variables for UI binding.
+    @Published var currentUser: User?
     @Published var isAuthenticated: Bool = false
     @Published var errorMessage: String?
-
-    private let baseURL = "https://spectrum-sync-backend.azurewebsites.net/api/auth"
-
-    // Register User
+    
+    // Base URL for authentication endpoints.
+    private let authBaseURL = "https://your-backend-url.com/api/auth"
+    
+    /// Registers a new user.
+    /// - Parameters:
+    ///   - username: User’s desired username.
+    ///   - email: User’s email.
+    ///   - password: User’s password.
     func register(username: String, email: String, password: String) {
-        guard let url = URL(string: "\(baseURL)/register") else {
-            print("Invalid URL")
+        guard let url = URL(string: "\(authBaseURL)/register") else {
+            self.errorMessage = "Invalid URL."
             return
         }
-
-        let parameters = ["username": username, "email": email, "password": password]
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
-
-        do {
-            request.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: [])
-        } catch {
-            print("Error serializing JSON:", error)
+        
+        let parameters: [String: Any] = [
+            "username": username,
+            "email": email,
+            "password": password
+        ]
+        
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: parameters) else {
+            self.errorMessage = "Invalid parameters."
             return
         }
-
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    self.errorMessage = error.localizedDescription
-                    return
-                }
-
-                guard let data = data else {
-                    self.errorMessage = "No data received"
-                    return
-                }
-
-                do {
-                    let decodedUser = try JSONDecoder().decode(User.self, from: data)
-                    self.user = decodedUser
-                    self.isAuthenticated = true
-                } catch {
-                    self.errorMessage = "Registration failed: \(error.localizedDescription)"
-                }
+        
+        NetworkManager.shared.request(url: url,
+                                      method: .post,
+                                      headers: ["Content-Type": "application/json"],
+                                      body: jsonData) { (result: Result<User, APIError>) in
+            switch result {
+            case .success(let user):
+                self.currentUser = user
+                self.isAuthenticated = true
+                // Optionally: Store token securely.
+            case .failure(let error):
+                self.errorMessage = error.localizedDescription
             }
-        }.resume()
+        }
     }
-
-    // Login User
+    
+    /// Logs in an existing user.
+    /// - Parameters:
+    ///   - email: User’s email.
+    ///   - password: User’s password.
     func login(email: String, password: String) {
-        guard let url = URL(string: "\(baseURL)/login") else {
-            print("Invalid URL")
+        guard let url = URL(string: "\(authBaseURL)/login") else {
+            self.errorMessage = "Invalid URL."
             return
         }
-
-        let parameters = ["email": email, "password": password]
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
-
-        do {
-            request.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: [])
-        } catch {
-            print("Error serializing JSON:", error)
+        
+        let parameters: [String: Any] = [
+            "email": email,
+            "password": password
+        ]
+        
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: parameters) else {
+            self.errorMessage = "Invalid parameters."
             return
         }
-
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    self.errorMessage = error.localizedDescription
-                    return
-                }
-
-                guard let data = data else {
-                    self.errorMessage = "No data received"
-                    return
-                }
-
-                do {
-                    let decodedUser = try JSONDecoder().decode(User.self, from: data)
-                    self.user = decodedUser
-                    self.isAuthenticated = true
-                } catch {
-                    self.errorMessage = "Login failed: \(error.localizedDescription)"
-                }
+        
+        NetworkManager.shared.request(url: url,
+                                      method: .post,
+                                      headers: ["Content-Type": "application/json"],
+                                      body: jsonData) { (result: Result<User, APIError>) in
+            switch result {
+            case .success(let user):
+                self.currentUser = user
+                self.isAuthenticated = true
+            case .failure(let error):
+                self.errorMessage = error.localizedDescription
             }
-        }.resume()
+        }
     }
-
-    // Logout User
+    
+    /// Logs out the current user.
     func logout() {
-        self.user = nil
-        self.isAuthenticated = false
+        guard let url = URL(string: "\(authBaseURL)/logout") else {
+            self.errorMessage = "Invalid URL."
+            return
+        }
+        
+        // Prepare headers (include token if available).
+        var headers: [String: String] = ["Content-Type": "application/json"]
+        if let token = currentUser?.token {
+            headers["Authorization"] = "Bearer \(token)"
+        }
+        
+        NetworkManager.shared.request(url: url,
+                                      method: .post,
+                                      headers: headers,
+                                      body: nil) { (result: Result<[String: String], APIError>) in
+            switch result {
+            case .success:
+                self.currentUser = nil
+                self.isAuthenticated = false
+            case .failure(let error):
+                self.errorMessage = error.localizedDescription
+            }
+        }
     }
 }

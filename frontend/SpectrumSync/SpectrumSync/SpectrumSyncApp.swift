@@ -9,7 +9,7 @@ struct SpectrumSyncApp: App {
     var body: some Scene {
         WindowGroup {
             if authViewModel.isAuthenticated {
-                HomeView()
+                HomeView(authVM: authViewModel)
                     .environmentObject(authViewModel)
             } else {
                 SplashView()

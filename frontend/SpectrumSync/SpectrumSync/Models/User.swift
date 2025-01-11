@@ -1,8 +1,8 @@
-// SpectrumSync/Models/User.swift
-
+// Models/User.swift
 import Foundation
 
-struct User: Codable {
+/// Represents a User returned by the backend.
+struct User: Codable, Identifiable {
     let id: Int
     let username: String
     let email: String
