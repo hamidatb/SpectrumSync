@@ -4,7 +4,10 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const authRoutes = require('./routes/authRoutes');
-const eventRoutes = require('./routes/eventRoutes'); // Import event routes
+const eventRoutes = require('./routes/eventRoutes');
+const chatRoutes = require('./routes/chatRoutes');
+const friendRoutes = require('./routes/friendRoutes');
+
 require('dotenv').config();
 
 const app = express();
@@ -15,7 +18,9 @@ app.use(bodyParser.json());
 
 // Routes (using Express)
 app.use('/api/auth', authRoutes);
-app.use('/api/events', eventRoutes); // Use event routes
+app.use('/api/events', eventRoutes);
+app.use('/api/chats', chatRoutes);
+app.use('/api/friends', friendRoutes);
 
 // Root Route
 app.get('/', (req, res) => {

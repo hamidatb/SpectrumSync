@@ -58,8 +58,30 @@ const validateEventId = (req, res) => {
     return true;
 };
 
+/**
+ * Utility function to validate the chat ID's existence from the request parameters.
+ * @param {Object} req - The Express request object.
+ * @param {Object} res - The Express response object.
+ * @returns {Boolean} - Returns true if chatId is valid, otherwise sends a 400 response.
+ */
+const validateChatId = (req, res) => {
+    const chatId = req.params?.chatId;
+    if (!chatId) {
+        console.warn('Chat ID is missing from the request.');
+        res.status(400).json({ message: 'Chat ID is required.' });
+        return false;
+    }
+    if (isNaN(parseInt(chatId, 10))) { // Corrected here
+        console.warn('Invalid Chat ID format:', chatId); // And here
+        res.status(400).json({ message: 'Chat ID must be a valid number.' });
+        return false;
+    }
+    return true;
+};
+
 module.exports = {
     validateUserId,
     validateEventId,
     validateFields,
+    validateChatId
 };
