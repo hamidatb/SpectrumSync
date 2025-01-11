@@ -16,13 +16,14 @@ struct OnboardingView: View {
             Color.white
                 .ignoresSafeArea()
             
-            VStack(spacing: 30) {
+            VStack(spacing: 5) {
                 // Logo at the top
                 Image("LogoDark")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 150, height: 150)
                     .padding(.top, 40)
+                    .opacity(/*@START_MENU_TOKEN@*/0.8/*@END_MENU_TOKEN@*/)
                 
                 Spacer()
                 
@@ -33,38 +34,45 @@ struct OnboardingView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(height: 300)
-                        .padding(.bottom, 20)
+                        .padding(.bottom, 10)
                     
                     // Slide title
                     Text(slides[currentSlide].0)
-                        .font(.custom("Montserrat-SemiBold", size: 28))
+                        .font(.custom("Montserrat-Bold", size: 28))
                         .foregroundColor(.customDarkBlue)
                         .padding(.top, 10)
                     
                     // Slide description
                     Text(slides[currentSlide].1)
                         .font(.custom("Montserrat-Regular", size: 18))
-                        .foregroundColor(.customGray)
+                        .foregroundColor(.customDarkBlue)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 40)
                 }
                 
-                Spacer()
-                
-                // Dot indicators
+                .padding(.bottom, 40)  // Control spacing between slide content and buttons
+
+                // Interactive dot indicators
                 HStack {
                     ForEach(0..<slides.count, id: \.self) { index in
-                        Circle()
-                            .fill(index == currentSlide ? Color.customBlue : Color.customLightGray)
-                            .frame(width: 10, height: 10)
-                            .padding(4)
+                        // Add Button to make dots interactive
+                        Button(action: {
+                            withAnimation {
+                                currentSlide = index  // Navigate to the corresponding slide
+                            }
+                        }) {
+                            Circle()
+                                .fill(index == currentSlide ? Color.customBlue : Color.customLightBlue)
+                                .frame(width: 20, height: 15)
+                                .padding(4)
+                        }
                     }
                 }
                 .padding(.bottom, 20)
                 
-                // Buttons
+                // Buttons (Continue and Skip)
                 VStack(spacing: 10) {
-                    // Continue button
+                    // Continue / Get Started button
                     Button(action: {
                         if currentSlide < slides.count - 1 {
                             withAnimation {
@@ -72,14 +80,15 @@ struct OnboardingView: View {
                             }
                         } else {
                             // Navigate to the next view
-                            ChooseLoginRegisterView()
+                            // Replace 'ChooseLoginRegisterView()' with your actual navigation logic
+                            print("Get Started button tapped!")
                         }
                     }) {
                         Text(currentSlide < slides.count - 1 ? "Continue" : "Get Started")
                             .font(.custom("Montserrat-SemiBold", size: 20))
                             .padding()
                             .frame(maxWidth: .infinity)
-                            .background(Color.customBlue)
+                            .background(LinearGradient.buttonGradient)
                             .foregroundColor(.white)
                             .cornerRadius(10)
                             .padding(.horizontal, 40)
@@ -88,15 +97,20 @@ struct OnboardingView: View {
                     // Skip button
                     Button(action: {
                         // Navigate directly to the login/register view
-                        ChooseLoginRegisterView()
+                        // Replace 'ChooseLoginRegisterView()' with your actual navigation logic
+                        print("Skip button tapped!")
                     }) {
                         Text("Skip")
-                            .font(.custom("Montserrat-Regular", size: 18))
+                            .font(.custom("Montserrat-Italic", size: 18))
                             .foregroundColor(.customBlue)
                     }
+                    .padding(.bottom, 20)
                 }
-                .padding(.bottom, 20)
             }
+            // Overall Zstack padding
+            .padding(.bottom, 175)  // Add padding to ensure buttons stay visible
+            .padding(.top, 100)  // Control spacing between slide content and buttons
+
         }
     }
 }

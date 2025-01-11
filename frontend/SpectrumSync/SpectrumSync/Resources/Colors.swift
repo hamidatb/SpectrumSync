@@ -54,3 +54,18 @@ extension Color {
         self.init(red: red, green: green, blue: blue)
     }
 }
+
+extension LinearGradient {
+    static let buttonGradient = LinearGradient(
+        gradient: Gradient(colors: [Color.customLightBlue, Color.customBlue]),
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+        
+    // Gradient for background
+    static let backgroundGradient = LinearGradient(
+        gradient: Gradient(colors: [Color(hex: "#BAF4FF"), Color(hex: "#FFF7D3")]),
+        startPoint: .top,
+        endPoint: .bottom
+    )
+}

@@ -7,7 +7,7 @@ struct SplashView: View {
     var body: some View {
         ZStack {
             // Gradient background
-            Color.customGradient
+            LinearGradient.backgroundGradient
                 .ignoresSafeArea()
             
             // Conditional navigation logic
