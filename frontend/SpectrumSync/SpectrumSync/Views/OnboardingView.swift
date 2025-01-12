@@ -9,7 +9,6 @@ struct OnboardingView: View {
     ]
     
     @State private var currentSlide = 0  // Track the current slide
-    @State private var navigateToNextView = false  // State to track navigation
 
     var body: some View {
         NavigationStack {
@@ -52,11 +51,31 @@ struct OnboardingView: View {
                             .padding(.horizontal, 40)
                     }
                     .padding(.bottom, 40)
+                    .gesture(
+                        DragGesture()
+                            .onEnded { value in
+                                // Swipe right to go to the previous slide
+                                if value.translation.width > 50 {
+                                    if currentSlide > 0 {
+                                        withAnimation {
+                                            currentSlide -= 1
+                                        }
+                                    }
+                                }
+                                // Swipe left to go to the next slide
+                                else if value.translation.width < -50 {
+                                    if currentSlide < slides.count - 1 {
+                                        withAnimation {
+                                            currentSlide += 1
+                                        }
+                                    }
+                                }
+                            }
+                    )
 
                     // Interactive dot indicators
                     HStack {
                         ForEach(0..<slides.count, id: \.self) { index in
-                            // Add Button to make dots interactive
                             Button(action: {
                                 withAnimation {
                                     currentSlide = index  // Navigate to the corresponding slide
@@ -74,17 +93,23 @@ struct OnboardingView: View {
                     // Buttons (Continue and Skip)
                     VStack(spacing: 10) {
                         // Continue / Get Started button
-                        Button(action: {
-                            if currentSlide < slides.count - 1 {
+                        if currentSlide < slides.count - 1 {
+                            Button(action: {
                                 withAnimation {
                                     currentSlide += 1
                                 }
-                            } else {
-                                // Navigate to the next view
-                                navigateToNextView = true
+                            }) {
+                                Text("Continue")
+                                    .font(.custom("Montserrat-SemiBold", size: 20))
+                                    .padding()
+                                    .frame(maxWidth: .infinity)
+                                    .background(LinearGradient.buttonGradient)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(10)
+                                    .padding(.horizontal, 40)
                             }
-                        }) {
-                            Text(currentSlide < slides.count - 1 ? "Continue" : "Get Started")
+                        } else {
+                            NavigationLink("Get Started", value: "ChooseLoginRegisterView")
                                 .font(.custom("Montserrat-SemiBold", size: 20))
                                 .padding()
                                 .frame(maxWidth: .infinity)
@@ -93,34 +118,21 @@ struct OnboardingView: View {
                                 .cornerRadius(10)
                                 .padding(.horizontal, 40)
                         }
-                        
-                        // Skip button
-                        NavigationLink(
-                            destination: ChooseLoginRegisterView(),
-                            isActive: $navigateToNextView
-                        ) {
-                            Button(action: {
-                                // Navigate directly to the login/register view
-                                navigateToNextView = true
-                            }) {
-                                Text("Skip")
-                                    .font(.custom("Montserrat-Italic", size: 18))
-                                    .foregroundColor(.customBlue)
-                            }
-                        }
-                        .padding(.bottom, 20)
+
+                        // Skip button with NavigationLink
+                        NavigationLink("Skip", value: "ChooseLoginRegisterView")
+                            .font(.custom("Montserrat-Italic", size: 18))
+                            .foregroundColor(.customBlue)
                     }
                 }
-                .padding(.bottom, 175)  // Add padding to ensure buttons stay visible
-                .padding(.top, 100)  // Control spacing between slide content and buttons
+                .padding(.bottom, 175)
+                .padding(.top, 100)
+            }
+            .navigationDestination(for: String.self) { value in
+                if value == "ChooseLoginRegisterView" {
+                    ChooseLoginRegisterView()
+                }
             }
         }
     }
 }
-
-struct OnboardingView_Previews: PreviewProvider {
-    static var previews: some View {
-        OnboardingView()
-    }
-}
-
