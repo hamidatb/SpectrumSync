@@ -11,7 +11,7 @@ final class AuthViewModel: ObservableObject {
     @Published var errorMessage: String?
     
     // Base URL for authentication endpoints.
-    private let authBaseURL = "https://your-backend-url.com/api/auth"
+    private let authBaseURL = "https://spectrum-sync-backend-g3hnfve7h3fdbuf4.canadacentral-01.azurewebsites.net/api/auth"
     
     /// Registers a new user.
     /// - Parameters:
@@ -23,6 +23,25 @@ final class AuthViewModel: ObservableObject {
             self.errorMessage = "Invalid URL."
             return
         }
+        
+        // Validate email: check that it contains "@" and a dot.
+        guard email.contains("@"), email.contains(".") else {
+            errorMessage = "Please enter a valid email address."
+            return
+        }
+        
+        // Validate password: check for minimum 6 characters (you may add further complexity criteria).
+        guard password.count >= 6 else {
+            errorMessage = "Password must be at least 6 characters long."
+            return
+        }
+        
+        // Validate username: simple non-empty check.
+        guard !username.trimmingCharacters(in: .whitespaces).isEmpty else {
+            errorMessage = "Username cannot be empty."
+            return
+        }
+
         
         let parameters: [String: Any] = [
             "username": username,

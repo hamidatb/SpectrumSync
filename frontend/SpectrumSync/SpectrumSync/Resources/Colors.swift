@@ -26,13 +26,6 @@ extension Color {
     static let customLightBlue = Color(hex: "#BAF4FF")
     static let customBlue = Color(hex: "#1EC6F2")
     static let customDarkBlue = Color(hex: "#072F45")
-
-    // Gradient for background
-    static let customGradient = LinearGradient(
-        gradient: Gradient(colors: [Color(hex: "#BAF4FF"), Color(hex: "#FFF7D3")]),
-        startPoint: .top,
-        endPoint: .bottom
-    )
 }
 
 // Utility to convert hex color codes to SwiftUI Color
@@ -67,5 +60,12 @@ extension LinearGradient {
         gradient: Gradient(colors: [Color(hex: "#BAF4FF"), Color(hex: "#FFF7D3")]),
         startPoint: .top,
         endPoint: .bottom
+    )
+    
+    // Gradient to apply on text elements
+    static let textGradient = LinearGradient(
+        gradient: Gradient(colors: [Color.customBlue, Color.customLightBlue]),
+        startPoint: .leading,
+        endPoint: .trailing
     )
 }
