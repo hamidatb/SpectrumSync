@@ -32,11 +32,18 @@ struct OnboardingView: View {
                     // Slide content with live drag offset
                     VStack {
                         // Slide image
-                        Image(slides[currentSlide].2)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 250)
-                            .padding(.bottom, 10)
+                        ZStack {
+                            ForEach(0..<slides.count, id: \.self) { index in
+                                if index == currentSlide {
+                                    Image(slides[index].2)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(height: 250)
+                                        .padding(.bottom, 10)
+                                        .transition(.opacity)  // Smooth fade transition
+                                }
+                            }
+                        }
                         
                         // Slide title
                         Text(slides[currentSlide].0)

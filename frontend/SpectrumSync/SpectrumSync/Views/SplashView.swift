@@ -12,8 +12,8 @@ struct SplashView: View {
             
             // Show the GIF if the splash is active
             if !isActive {
-                GIFView(gifName: "splash")
-                    .scaledToFit()
+                GIFView(gifName: "splash_logo")
+                    .scaleEffect(0.3) // Scale to 30% of original size
                     .transition(.opacity)
             } else {
                 // Transition to the OnboardingView after the splash is done
@@ -24,7 +24,8 @@ struct SplashView: View {
         .onAppear {
             // Get the GIF duration, then navigate after it's done
             let gifDuration = UIImage.gifDuration(data: try! Data(contentsOf: Bundle.main.url(forResource: "splash", withExtension: "gif")!))
-            DispatchQueue.main.asyncAfter(deadline: .now() + gifDuration) {
+            // Keep the splash screen for 3 seconds
+            DispatchQueue.main.asyncAfter(deadline: .now() + gifDuration + 2) {
                 withAnimation(.easeInOut(duration: 1)) {
                     self.isActive = true
                 }
