@@ -1,5 +1,3 @@
-// SpectrumSync/SpectrumSyncApp.swift
-
 import SwiftUI
 
 @main
@@ -8,12 +6,14 @@ struct SpectrumSyncApp: App {
 
     var body: some Scene {
         WindowGroup {
-            if authViewModel.isAuthenticated {
-                HomeView(authVM: authViewModel)
-                    .environmentObject(authViewModel)
-            } else {
-                SplashView()
-                    .environmentObject(authViewModel)
+            NavigationStack {
+                if authViewModel.isAuthenticated {
+                    HomeView(authVM: authViewModel)
+                        .environmentObject(authViewModel)
+                } else {
+                    SplashView()
+                        .environmentObject(authViewModel)
+                }
             }
         }
     }
