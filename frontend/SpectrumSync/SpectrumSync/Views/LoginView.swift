@@ -7,74 +7,72 @@ struct LoginView: View {
     @State private var showError: Bool = false
 
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 20) {
-                // MARK: - Form Header
+        VStack(spacing: 20) {
+            // Logo at the top
+            Image("LogoDark")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 150, height: 150)
+                .padding(.top, 40)
+                .opacity(0.8)
+            
+            // MARK: - Form Header
+            Text("Login")
+                .font(.custom("Montserrat-Bold", size: 28))
+                .foregroundStyle(LinearGradient.darkBlueTextGradient)
+                .padding(.top, 50)
+
+            // MARK: - Email Input
+            TextField("Email", text: $email)
+                .keyboardType(.emailAddress)
+                .padding()
+                .background(Color(.secondarySystemBackground))
+                .cornerRadius(5)
+                .frame(width: 300)
+
+            // MARK: - Password Input
+            SecureField("Password", text: $password)
+                .padding()
+                .background(Color(.secondarySystemBackground))
+                .cornerRadius(5)
+                .frame(width: 300)
+
+            // MARK: - Login Button
+            Button(action: {
+                print("Attempting login with email: \(email)")
+                authViewModel.login(email: email, password: password)
+            }) {
                 Text("Login")
-                    .font(.custom("Montserrat-Bold", size: 28))
-                    .foregroundStyle(
-                        LinearGradient(
-                            gradient: Gradient(colors: [.blue, .purple]),
-                            startPoint: .leading,
-                            endPoint: .trailing)
-                    )
-                    .padding(.top, 20)
-
-                // MARK: - Email Input
-                TextField("Email", text: $email)
-                    .keyboardType(.emailAddress)
+                    .font(.custom("Montserrat-SemiBold", size: 20))
+                    .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color(.secondarySystemBackground))
-                    .cornerRadius(5)
-
-                // MARK: - Password Input
-                SecureField("Password", text: $password)
-                    .padding()
-                    .background(Color(.secondarySystemBackground))
-                    .cornerRadius(5)
-
-                // MARK: - Login Button
-                Button(action: {
-                    print("Attempting login with email: \(email)")
-                    authViewModel.login(email: email, password: password)
-                }) {
-                    Text("Login")
-                        .font(.custom("Montserrat-SemiBold", size: 20))
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.customDarkBlue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                        .padding(.horizontal, 40)
-                }
-
-                // MARK: - Error Message
-                if let error = authViewModel.errorMessage, showError {
-                    Text(error)
-                        .foregroundColor(.red)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 20)
-                        .transition(.opacity)
-                }
-
-                Spacer()
+                    .background(Color.customDarkBlue)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+                    .padding(.horizontal, 30)
             }
-            .padding()
-            .onReceive(authViewModel.$isAuthenticated) { isAuthenticated in
-                if isAuthenticated {
-                    print("Login successful!")
-                }
-                showError = authViewModel.errorMessage != nil
+
+            // MARK: - Error Message
+            if let error = authViewModel.errorMessage, showError {
+                Text(error)
+                    .foregroundColor(.red)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 20)
+                    .transition(.opacity)
             }
-            .navigationDestination(isPresented: $authViewModel.isAuthenticated) {
-                HomeView(authVM: authViewModel)
+
+            Spacer()
+        }
+        .padding()
+        .onReceive(authViewModel.$isAuthenticated) { isAuthenticated in
+            if isAuthenticated {
+                print("Login successful!")
             }
+            showError = authViewModel.errorMessage != nil
         }
     }
 }
 
-
-// MARK: - Preview Provider
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
         LoginView()

@@ -68,4 +68,10 @@ extension LinearGradient {
         startPoint: .leading,
         endPoint: .trailing
     )
+    
+    static let darkBlueTextGradient = LinearGradient(
+        gradient: Gradient(colors: [.blue, Color.customBlue]),
+        startPoint: .leading,
+        endPoint: .trailing
+    )
 }

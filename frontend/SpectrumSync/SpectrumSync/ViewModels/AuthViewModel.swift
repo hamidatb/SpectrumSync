@@ -61,6 +61,7 @@ final class AuthViewModel: ObservableObject {
         }
         
         // Make network request for registration.
+        // Make network request for registration.
         NetworkManager.shared.request(
             url: url,
             method: .post,
@@ -70,18 +71,24 @@ final class AuthViewModel: ObservableObject {
             switch result {
             case .success(let authResponse):
                 print("Registration API success: \(authResponse.message)")
-                // Assign the token to the user model.
-                var loggedInUser = authResponse.user
-                loggedInUser.token = authResponse.token
-                self.currentUser = loggedInUser
-                self.isAuthenticated = true
+                
+                // Update UI-related properties on the main thread
+                DispatchQueue.main.async {
+                    var loggedInUser = authResponse.user
+                    loggedInUser.token = authResponse.token
+                    self.currentUser = loggedInUser
+                    self.isAuthenticated = true
+                }
+                
             case .failure(let error):
-                if case APIError.httpError(let code) = error, code == 400 {
-                    self.errorMessage = "A user already exists with that email"
-                    print("Registration failed: User already exists (400 error).")
-                } else {
-                    self.errorMessage = "Registration failed, please try again."
-                    print("Registration API error: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    if case APIError.httpError(let code) = error, code == 400 {
+                        self.errorMessage = "A user already exists with that email"
+                        print("Registration failed: User already exists (400 error).")
+                    } else {
+                        self.errorMessage = "Registration failed, please try again."
+                        print("Registration API error: \(error.localizedDescription)")
+                    }
                 }
             }
         }
