@@ -34,7 +34,7 @@ struct OnboardingView: View {
                         Image(slides[currentSlide].2)
                             .resizable()
                             .scaledToFit()
-                            .frame(height: 300)
+                            .frame(height: 250)
                             .padding(.bottom, 10)
                         
                         // Slide title
@@ -45,7 +45,7 @@ struct OnboardingView: View {
                         
                         // Slide description
                         Text(slides[currentSlide].1)
-                            .font(.custom("Montserrat-Regular", size: 18))
+                            .font(.custom("Montserrat-Regular", size: 15))
                             .foregroundColor(.customDarkBlue)
                             .multilineTextAlignment(.center)
                             .padding(.horizontal, 40)
@@ -125,7 +125,7 @@ struct OnboardingView: View {
                             .foregroundColor(.customBlue)
                     }
                 }
-                .padding(.bottom, 175)
+                .padding(.bottom, 225)
                 .padding(.top, 100)
             }
             .navigationDestination(for: String.self) { value in

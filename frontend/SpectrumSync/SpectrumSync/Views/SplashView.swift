@@ -18,23 +18,21 @@ struct SplashView: View {
                     .animation(.easeInOut(duration: 1.5), value: isActive)
 
             } else {
-                
-                VStack(spacing: 20) {
-                    Image("LogoDark")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 200, height: 200)
-                        .scaleEffect(isActive ? 1 : 0.8)  // Add scaling effect
-                        .animation(.easeInOut(duration: 1.5), value: isActive)
+                GeometryReader { geometry in
+                    VStack {
+                        Spacer()
 
-                    Text("Welcome to SpectrumSync")
-                        .font(.custom("Montserrat-Bold", size: 32))
-                        .foregroundColor(.customDarkBlue)
-                        .multilineTextAlignment(.center)
-                        .frame(maxWidth: .infinity)  // Center text horizontally
-                        .padding()
+                        // Center the logo exactly in the middle of the screen
+                        Image("LogoDark")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 400, height: 400)
+                            .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
+                            .scaleEffect(isActive ? 1 : 0.8)
+                            .animation(.easeInOut(duration: 1.5), value: isActive)
 
-                    Spacer()
+                        Spacer()
+                    }
                 }
                 .transition(.opacity)  // Smooth fade-out transition
                 .onAppear {
