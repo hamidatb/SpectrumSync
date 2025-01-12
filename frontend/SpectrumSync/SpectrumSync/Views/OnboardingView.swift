@@ -1,14 +1,14 @@
 import SwiftUI
 
 struct OnboardingView: View {
-    // Slide data: Each tuple contains the title, description, and image name
+    // Slide data: title, description, and image name
     let slides = [
         ("Connect", "Talk with the whole family", "onboarding_connect_img"),
         ("Update", "Share and See the Schedule", "onboarding_update_img"),
         ("Manage", "See and Update the Routine", "onboarding_manage_img")
     ]
     
-    @State private var currentSlide = 0  // Track the current slide
+    @State private var currentSlide = 0  // Track the current slide index
     @GestureState private var dragOffset: CGFloat = 0  // Live drag offset
 
     var body: some View {
@@ -60,18 +60,18 @@ struct OnboardingView: View {
                                 state = value.translation.width
                             }
                             .onEnded { value in
-                                // Slide animation sensitivity
-                                let threshold: CGFloat = 100
+                                // Reduced threshold for increased sensitivity
+                                let threshold: CGFloat = 50
                                 
                                 // Drag Left – Next Slide
                                 if value.translation.width < -threshold, currentSlide < slides.count - 1 {
-                                    withAnimation {
+                                    withAnimation(.easeInOut(duration: 0.3)) {
                                         currentSlide += 1
                                     }
                                 }
                                 // Drag Right – Previous Slide
                                 else if value.translation.width > threshold, currentSlide > 0 {
-                                    withAnimation {
+                                    withAnimation(.easeInOut(duration: 0.3)) {
                                         currentSlide -= 1
                                     }
                                 }
@@ -82,7 +82,7 @@ struct OnboardingView: View {
                     HStack {
                         ForEach(0..<slides.count, id: \.self) { index in
                             Button(action: {
-                                withAnimation {
+                                withAnimation(.easeInOut(duration: 0.3)) {
                                     currentSlide = index  // Navigate to the corresponding slide
                                 }
                             }) {
@@ -97,10 +97,9 @@ struct OnboardingView: View {
                     
                     // Buttons (Continue and Skip)
                     VStack(spacing: 10) {
-                        // Continue / Get Started button
                         if currentSlide < slides.count - 1 {
                             Button(action: {
-                                withAnimation {
+                                withAnimation(.easeInOut(duration: 0.3)) {
                                     currentSlide += 1
                                 }
                             }) {
