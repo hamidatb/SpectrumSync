@@ -2,9 +2,9 @@
 import Foundation
 
 /// Represents a User returned by the backend.
-struct User: Codable, Identifiable {
-    let id: Int
+struct User: Decodable {
+    let userId: Int
     let username: String
     let email: String
-    let token: String?
+    var token: String?  // JWT for authentication throughout the app
 }

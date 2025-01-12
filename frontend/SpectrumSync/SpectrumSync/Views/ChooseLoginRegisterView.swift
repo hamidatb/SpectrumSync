@@ -3,12 +3,13 @@ import SwiftUI
 struct ChooseLoginRegisterView: View {
     var body: some View {
         VStack(spacing: 40) {
+            Color.white
+            
             // MARK: - Running
             Image("reg_login_running")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 200, height: 200)
-                .padding(.top, 100)
                 .opacity(0.8)
             
             // MARK: - Gradient Text Section
@@ -39,6 +40,7 @@ struct ChooseLoginRegisterView: View {
                         .foregroundColor(.white)
                         .cornerRadius(10)
                         .padding(.horizontal, 40)
+                        .padding(.bottom, 100)
                 }
             }
             
