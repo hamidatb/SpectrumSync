@@ -23,7 +23,7 @@ struct SplashView: View {
         }
         .onAppear {
             // Get the GIF duration, then navigate after it's done
-            let gifDuration = UIImage.gifDuration(data: try! Data(contentsOf: Bundle.main.url(forResource: "splash", withExtension: "gif")!))
+            let gifDuration = UIImage.gifDuration(data: try! Data(contentsOf: Bundle.main.url(forResource: "splash_logo", withExtension: "gif")!))
             // Keep the splash screen for 3 seconds
             DispatchQueue.main.asyncAfter(deadline: .now() + gifDuration + 2) {
                 withAnimation(.easeInOut(duration: 1)) {
