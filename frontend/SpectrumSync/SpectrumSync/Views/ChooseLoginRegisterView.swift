@@ -4,30 +4,22 @@ struct ChooseLoginRegisterView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 40) {
-                
-                // MARK: - Logo Section
+                // MARK: - Running
                 // Displays the app's logo at the top, centered with some styling.
-                Image("LogoDark")
+                Image("reg_login_running")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 150, height: 150)
-                    .padding(.top, 40)
+                    .frame(width: 200, height: 200)
+                    .padding(.top, 100)
                     .opacity(0.8)
                 
                 // MARK: - Gradient Text Section
                 // Displays a bold, gradient-filled welcome message below the logo.
-                Text("Welcome to SpectrumSync")
+                Text("Let's get started 🥳")
                     .font(.custom("Montserrat-Bold", size: 28))
-                    .foregroundStyle(
-                        LinearGradient(
-                            gradient: Gradient(colors: [Color.customBlue, Color.customLightBlue]),
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
+                    .foregroundStyle(LinearGradient.textGradient)
                     .padding(.top, 10)
                 
-                Spacer() // Pushes content down, creating balanced spacing.
                 
                 // MARK: - Navigation Buttons Section
                 // Contains buttons for Register and Login which navigate smoothly to their respective views.
