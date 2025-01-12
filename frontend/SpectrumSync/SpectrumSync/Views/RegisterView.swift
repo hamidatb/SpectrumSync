@@ -101,7 +101,6 @@ struct RegisterView: View {
         }
         .padding()
         .navigationBarBackButtonHidden(true)
-        // Removed the deprecated navigationDestination modifier – the root view switches to HomeView when isAuthenticated becomes true.
     }
 }
 

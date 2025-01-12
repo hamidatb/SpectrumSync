@@ -39,6 +39,19 @@ struct LoginView: View {
 
             // MARK: - Login Button
             Button(action: {
+                // Local validations
+                if email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    authViewModel.errorMessage = "Email cannot be empty."
+                    showError = true
+                    return
+                }
+                if password.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    authViewModel.errorMessage = "Password cannot be empty."
+                    showError = true
+                    return
+                }
+                
+                // Attempt login
                 print("Attempting login with email: \(email)")
                 authViewModel.login(email: email, password: password)
             }) {
@@ -64,9 +77,16 @@ struct LoginView: View {
             Spacer()
         }
         .padding()
-        .onReceive(authViewModel.$isAuthenticated) { isAuthenticated in
-            if isAuthenticated {
-                print("Login successful!")
+        // Handle authentication changes
+        .onChange(of: authViewModel.isAuthenticated) { oldValue, newValue in
+            if #available(iOS 17, *) {
+                if newValue {
+                    print("Login successful!")
+                }
+            } else {
+                if newValue {
+                    print("Login successful!")
+                }
             }
             showError = authViewModel.errorMessage != nil
         }
