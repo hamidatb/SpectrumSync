@@ -10,6 +10,7 @@ struct OnboardingView: View {
     
     @State private var currentSlide = 0  // Track the current slide index
     @GestureState private var dragOffset: CGFloat = 0  // Live drag offset
+    @EnvironmentObject var authViewModel: AuthViewModel
 
     var body: some View {
         NavigationStack {
@@ -120,21 +121,24 @@ struct OnboardingView: View {
                                     .padding(.horizontal, 40)
                             }
                         } else {
-                            NavigationLink("Get Started", value: "ChooseLoginRegisterView")
-                                .font(.custom("Montserrat-SemiBold", size: 20))
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                                .background(LinearGradient.buttonGradient)
-                                .foregroundColor(.white)
-                                .cornerRadius(10)
-                                .padding(.horizontal, 40)
+                            NavigationLink(destination: ChooseLoginRegisterView().environmentObject(authViewModel)) {
+                                Text("Get Started")
+                                    .font(.custom("Montserrat-SemiBold", size: 20))
+                                    .padding()
+                                    .frame(maxWidth: .infinity)
+                                    .background(LinearGradient.buttonGradient)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(10)
+                                    .padding(.horizontal, 40)
+                            }
                         }
                         
                         // Skip button with NavigationLink
-                        NavigationLink("Skip to Login/Register", value: "ChooseLoginRegisterView")
-                            .font(.custom("Montserrat-Italic", size: 15))
-                            .foregroundColor(.customBlue)
-                    }
+                        NavigationLink(destination: ChooseLoginRegisterView().environmentObject(authViewModel)) {
+                            Text("Skip to Login/Register")
+                                .font(.custom("Montserrat-Italic", size: 15))
+                                .foregroundColor(.customBlue)
+                        }                    }
                 }
                 .padding(.bottom, 225)
                 .padding(.top, 100)

@@ -3,7 +3,8 @@ import SwiftUI
 struct SplashView: View {
     // State variable to control when to navigate to the next screen
     @State private var isActive = false
-    
+    @EnvironmentObject var authViewModel: AuthViewModel // Use the environment object
+
     var body: some View {
         ZStack {
             // Background gradient
@@ -18,6 +19,7 @@ struct SplashView: View {
             } else {
                 // Transition to the OnboardingView after the splash is done
                 OnboardingView()
+                    .environmentObject(authViewModel)
                     .transition(.opacity)
             }
         }
@@ -37,5 +39,6 @@ struct SplashView: View {
 struct SplashView_Previews: PreviewProvider {
     static var previews: some View {
         SplashView()
+            .environmentObject(AuthViewModel()) // Inject a mock environment object
     }
 }

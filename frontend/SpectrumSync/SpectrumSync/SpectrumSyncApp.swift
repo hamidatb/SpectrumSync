@@ -8,7 +8,7 @@ struct SpectrumSyncApp: App {
         WindowGroup {
             NavigationStack {
                 if authViewModel.isAuthenticated {
-                    HomeView(authVM: authViewModel)
+                    HomeView()
                         .environmentObject(authViewModel)
                 } else {
                     SplashView()

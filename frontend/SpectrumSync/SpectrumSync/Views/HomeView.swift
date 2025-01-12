@@ -1,21 +1,19 @@
 import SwiftUI
 
 struct HomeView: View {
-    @ObservedObject var authVM: AuthViewModel
+    @EnvironmentObject var authVM: AuthViewModel
     @StateObject var chatVM = ChatViewModel()
     @StateObject var eventVM = EventViewModel()
     @StateObject var friendVM = FriendViewModel()
 
     var body: some View {
         VStack {
-            // Greet user
             Text("Hi \(authVM.currentUser?.username ?? "User")!")
                 .font(.title)
                 .fontWeight(.bold)
                 .padding()
                 .foregroundColor(Color.customBlue)
 
-            // Tab View
             TabView {
                 ChatView(chatVM: chatVM)
                     .tabItem { Label("Chats", systemImage: "message") }
@@ -30,7 +28,6 @@ struct HomeView: View {
             }
         }
         .onAppear {
-            // Set tokens for all view models
             if let token = authVM.currentUser?.token {
                 chatVM.setToken(token)
                 eventVM.setToken(token)
@@ -43,8 +40,10 @@ struct HomeView: View {
     }
 }
 
+
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView(authVM: AuthViewModel())
+        HomeView()
+            .environmentObject(AuthViewModel())
     }
 }

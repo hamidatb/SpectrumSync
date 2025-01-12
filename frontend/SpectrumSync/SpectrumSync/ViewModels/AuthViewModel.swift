@@ -8,6 +8,10 @@ final class AuthViewModel: ObservableObject {
     @Published var isAuthenticated: Bool = false
     @Published var errorMessage: String?
     
+    init() {
+        print("AuthViewModel initialized")
+    }
+
     // Base URL for authentication endpoints.
     private let authBaseURL = "https://spectrum-sync-backend-g3hnfve7h3fdbuf4.canadacentral-01.azurewebsites.net/api/auth"
     
@@ -127,17 +131,24 @@ final class AuthViewModel: ObservableObject {
             switch result {
             case .success(let authResponse):
                 print("Login API success: \(authResponse.message)")
-                var loggedInUser = authResponse.user
-                loggedInUser.token = authResponse.token
-                self.currentUser = loggedInUser
-                self.isAuthenticated = true
+                
+                DispatchQueue.main.async {
+                    var loggedInUser = authResponse.user
+                    loggedInUser.token = authResponse.token
+                    self.currentUser = loggedInUser
+                    self.isAuthenticated = true
+                    print("Login successful! Navigating to HomeView.")
+                }
+                
             case .failure(let error):
-                if case APIError.httpError(let code) = error, code == 400 {
-                    self.errorMessage = "Invalid credentials"
-                    print("Login failed: Invalid credentials (400 error).")
-                } else {
-                    self.errorMessage = "Login failed, please try again."
-                    print("Login API error: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    if case APIError.httpError(let code) = error, code == 400 {
+                        self.errorMessage = "Invalid credentials"
+                        print("Login failed: Invalid credentials (400 error).")
+                    } else {
+                        self.errorMessage = "Login failed, please try again."
+                        print("Login API error: \(error.localizedDescription)")
+                    }
                 }
             }
         }

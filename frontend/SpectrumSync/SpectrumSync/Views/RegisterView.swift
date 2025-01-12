@@ -100,7 +100,7 @@ struct RegisterView: View {
             Spacer()
         }
         .padding()
-        .navigationBarBackButtonHidden(true)
+        .navigationBarBackButtonHidden(false) // Don't Hide the default back button
     }
 }
 
