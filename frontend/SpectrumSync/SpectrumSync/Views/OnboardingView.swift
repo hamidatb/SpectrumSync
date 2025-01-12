@@ -9,6 +9,7 @@ struct OnboardingView: View {
     ]
     
     @State private var currentSlide = 0  // Track the current slide
+    @GestureState private var dragOffset: CGFloat = 0  // Live drag offset
 
     var body: some View {
         NavigationStack {
@@ -28,7 +29,7 @@ struct OnboardingView: View {
                     
                     Spacer()
                     
-                    // Slide content
+                    // Slide content with live drag offset
                     VStack {
                         // Slide image
                         Image(slides[currentSlide].2)
@@ -51,23 +52,27 @@ struct OnboardingView: View {
                             .padding(.horizontal, 40)
                     }
                     .padding(.bottom, 40)
+                    // Apply the drag gesture and live offset
+                    .offset(x: dragOffset)
                     .gesture(
                         DragGesture()
+                            .updating($dragOffset) { value, state, _ in
+                                state = value.translation.width
+                            }
                             .onEnded { value in
-                                // Swipe right to go to the previous slide
-                                if value.translation.width > 50 {
-                                    if currentSlide > 0 {
-                                        withAnimation {
-                                            currentSlide -= 1
-                                        }
+                                // Slide animation sensitivity
+                                let threshold: CGFloat = 100
+                                
+                                // Drag Left – Next Slide
+                                if value.translation.width < -threshold, currentSlide < slides.count - 1 {
+                                    withAnimation {
+                                        currentSlide += 1
                                     }
                                 }
-                                // Swipe left to go to the next slide
-                                else if value.translation.width < -50 {
-                                    if currentSlide < slides.count - 1 {
-                                        withAnimation {
-                                            currentSlide += 1
-                                        }
+                                // Drag Right – Previous Slide
+                                else if value.translation.width > threshold, currentSlide > 0 {
+                                    withAnimation {
+                                        currentSlide -= 1
                                     }
                                 }
                             }
@@ -118,10 +123,10 @@ struct OnboardingView: View {
                                 .cornerRadius(10)
                                 .padding(.horizontal, 40)
                         }
-
+                        
                         // Skip button with NavigationLink
-                        NavigationLink("Skip", value: "ChooseLoginRegisterView")
-                            .font(.custom("Montserrat-Italic", size: 18))
+                        NavigationLink("Skip to Login/Register", value: "ChooseLoginRegisterView")
+                            .font(.custom("Montserrat-Italic", size: 15))
                             .foregroundColor(.customBlue)
                     }
                 }
