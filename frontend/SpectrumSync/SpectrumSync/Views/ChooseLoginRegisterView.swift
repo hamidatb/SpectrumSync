@@ -68,5 +68,6 @@ struct ChooseLoginRegisterView: View {
 struct ChooseLoginRegisterView_Previews: PreviewProvider {
     static var previews: some View {
         ChooseLoginRegisterView()
+            .environmentObject(AuthViewModel()) // Inject the environment object
     }
 }
