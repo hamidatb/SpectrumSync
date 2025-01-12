@@ -14,7 +14,7 @@ final class AuthViewModel: ObservableObject {
     /// Registers a new user.
     /// - Parameters:
     ///   - username: User’s desired username.
-    ///   - email: User’s email.
+    ///   - email: User’s email (will be sent as lowercase).
     ///   - password: User’s password.
     func register(username: String, email: String, password: String) {
         print("Register function called with username: \(username), email: \(email)")
@@ -45,9 +45,12 @@ final class AuthViewModel: ObservableObject {
             return
         }
         
+        // **Convert email to lowercase before sending.**
+        let lowercasedEmail = email.lowercased()
+        
         let parameters: [String: Any] = [
             "username": username,
-            "email": email,
+            "email": lowercasedEmail,
             "password": password
         ]
         
@@ -63,17 +66,16 @@ final class AuthViewModel: ObservableObject {
             method: .post,
             headers: ["Content-Type": "application/json"],
             body: jsonData
-        ) { (result: Result<RegistrationResponse, APIError>) in
+        ) { (result: Result<AuthResponse, APIError>) in
             switch result {
-            case .success(let regResponse):
-                print("Registration API success: \(regResponse.message)")
-                // If needed, assign the token to the user model.
-                var loggedInUser = regResponse.user
-                loggedInUser.token = regResponse.token  // make sure your User model has an optional token property.
+            case .success(let authResponse):
+                print("Registration API success: \(authResponse.message)")
+                // Assign the token to the user model.
+                var loggedInUser = authResponse.user
+                loggedInUser.token = authResponse.token
                 self.currentUser = loggedInUser
                 self.isAuthenticated = true
             case .failure(let error):
-                // Check if the error is a 400 so we can show a custom message.
                 if case APIError.httpError(let code) = error, code == 400 {
                     self.errorMessage = "A user already exists with that email"
                     print("Registration failed: User already exists (400 error).")
@@ -98,7 +100,7 @@ final class AuthViewModel: ObservableObject {
         }
         
         let parameters: [String: Any] = [
-            "email": email,
+            "email": email.lowercased(),  // Optionally lower-case login email as well
             "password": password
         ]
         
@@ -114,15 +116,22 @@ final class AuthViewModel: ObservableObject {
             method: .post,
             headers: ["Content-Type": "application/json"],
             body: jsonData
-        ) { (result: Result<User, APIError>) in
+        ) { (result: Result<AuthResponse, APIError>) in
             switch result {
-            case .success(let user):
-                print("Login API success with user: \(user)")
-                self.currentUser = user
+            case .success(let authResponse):
+                print("Login API success: \(authResponse.message)")
+                var loggedInUser = authResponse.user
+                loggedInUser.token = authResponse.token
+                self.currentUser = loggedInUser
                 self.isAuthenticated = true
             case .failure(let error):
-                print("Login API error: \(error.localizedDescription)")
-                self.errorMessage = error.localizedDescription
+                if case APIError.httpError(let code) = error, code == 400 {
+                    self.errorMessage = "Invalid credentials"
+                    print("Login failed: Invalid credentials (400 error).")
+                } else {
+                    self.errorMessage = "Login failed, please try again."
+                    print("Login API error: \(error.localizedDescription)")
+                }
             }
         }
     }

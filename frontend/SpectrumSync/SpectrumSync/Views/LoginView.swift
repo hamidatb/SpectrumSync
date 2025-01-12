@@ -5,6 +5,7 @@ struct LoginView: View {
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var showError: Bool = false
+    @State private var showSuccessAlert: Bool = false
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
@@ -24,18 +25,21 @@ struct LoginView: View {
             TextField("Email", text: $email)
                 .keyboardType(.emailAddress)
                 .padding()
+                .frame(width: 300)
                 .background(Color(.secondarySystemBackground))
                 .cornerRadius(5)
             
             // MARK: - Password Input Field
             SecureField("Password", text: $password)
                 .padding()
+                .frame(width: 300)
                 .background(Color(.secondarySystemBackground))
                 .cornerRadius(5)
             
             // MARK: - Login Button (same styling as RegisterView)
             Button(action: {
                 print("Attempting login with email: \(email)")
+                // Optionally, add local validation if needed
                 authViewModel.login(email: email, password: password)
             }) {
                 Text("Login")
@@ -78,11 +82,30 @@ struct LoginView: View {
             }
         }
         .navigationTitle("Login")
-        // Observe authentication to provide further navigation if needed.
+        // Listen for authentication changes.
         .onReceive(authViewModel.$isAuthenticated) { isAuthenticated in
             if isAuthenticated {
                 print("Login successful!")
-                // Navigate to HomeView or similar as needed.
+                showSuccessAlert = true
+            }
+            // Reset error display if authentication state changes.
+            showError = !isAuthenticated && authViewModel.errorMessage != nil
+        }
+        // Success alert for a positive login outcome.
+        .alert(isPresented: $showSuccessAlert) {
+            Alert(
+                title: Text("Success"),
+                message: Text("Login successful!"),
+                dismissButton: .default(Text("OK"), action: {
+                    // After dismissing, navigate to HomeView.
+                    presentationMode.wrappedValue.dismiss()
+                })
+            )
+        }
+        // Optionally, listen to error message changes to trigger UI updates.
+        .onChange(of: authViewModel.errorMessage) { newValue in
+            if newValue != nil {
+                showError = true
             }
         }
     }
