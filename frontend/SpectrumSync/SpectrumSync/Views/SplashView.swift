@@ -12,8 +12,8 @@ struct SplashView: View {
             
             // Conditional navigation logic
             if isActive {
-                // Show the registration view after the splash loading delay is finished
-                ChooseLoginRegisterView()
+                // Show the onboarding view after the splash is displayed
+                OnboardingView()
                     .transition(.opacity)  // Smooth fade-in transition
                     .animation(.easeInOut(duration: 1.5), value: isActive)
 
