@@ -41,3 +41,5 @@ yarn-error.log*
 package-lock.json
 yarn.lock
 .pnpm-debug.log
+
+backendpublishprofile.publishsettings

@@ -1,5 +1,3 @@
-// SpectrumSync/Views/LoginView.swift
-
 import SwiftUI
 
 struct LoginView: View {
@@ -10,43 +8,87 @@ struct LoginView: View {
 
     var body: some View {
         VStack(spacing: 20) {
+            // Logo at the top
+            Image("LogoDark")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 150, height: 150)
+                .padding(.top, 40)
+                .opacity(0.8)
+            
+            // MARK: - Form Header
+            Text("Login")
+                .font(.custom("Montserrat-Bold", size: 28))
+                .foregroundStyle(LinearGradient.darkBlueTextGradient)
+                .padding(.top, 50)
+
+            // MARK: - Email Input
             TextField("Email", text: $email)
                 .keyboardType(.emailAddress)
                 .padding()
                 .background(Color(.secondarySystemBackground))
                 .cornerRadius(5)
+                .frame(width: 300)
 
+            // MARK: - Password Input
             SecureField("Password", text: $password)
                 .padding()
                 .background(Color(.secondarySystemBackground))
                 .cornerRadius(5)
+                .frame(width: 300)
 
+            // MARK: - Login Button
             Button(action: {
+                // Local validations
+                if email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    authViewModel.errorMessage = "Email cannot be empty."
+                    showError = true
+                    return
+                }
+                if password.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    authViewModel.errorMessage = "Password cannot be empty."
+                    showError = true
+                    return
+                }
+                
+                // Attempt login
+                print("Attempting login with email: \(email)")
                 authViewModel.login(email: email, password: password)
             }) {
                 Text("Login")
-                    .font(.headline)
+                    .font(.custom("Montserrat-SemiBold", size: 20))
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.purple)
+                    .background(Color.customDarkBlue)
                     .foregroundColor(.white)
                     .cornerRadius(10)
+                    .padding(.horizontal, 30)
             }
 
-            if let error = authViewModel.errorMessage {
+            // MARK: - Error Message
+            if let error = authViewModel.errorMessage, showError {
                 Text(error)
                     .foregroundColor(.red)
                     .multilineTextAlignment(.center)
+                    .padding(.horizontal, 20)
+                    .transition(.opacity)
             }
 
             Spacer()
         }
         .padding()
-        .navigationTitle("Login")
-        .onReceive(authViewModel.$isAuthenticated) { isAuthenticated in
-            if isAuthenticated {
-                // Navigate to HomeView or another appropriate view
+        // Handle authentication changes
+        .onChange(of: authViewModel.isAuthenticated) { oldValue, newValue in
+            if #available(iOS 17, *) {
+                if newValue {
+                    print("Login successful!")
+                }
+            } else {
+                if newValue {
+                    print("Login successful!")
+                }
             }
+            showError = authViewModel.errorMessage != nil
         }
     }
 }
