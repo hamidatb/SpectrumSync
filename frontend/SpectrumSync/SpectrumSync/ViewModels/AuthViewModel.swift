@@ -8,6 +8,12 @@ final class AuthViewModel: ObservableObject {
     @Published var isAuthenticated: Bool = false
     @Published var errorMessage: String?
     
+    private let environment: AppEnvironment
+    
+    init(environment: AppEnvironment) {
+            self.environment = environment
+    }
+
     init() {
         print("AuthViewModel initialized")
     }
