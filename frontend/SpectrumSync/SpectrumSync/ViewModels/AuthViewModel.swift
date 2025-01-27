@@ -171,11 +171,15 @@ final class AuthViewModel: ObservableObject {
             switch result {
             case .success:
                 print("Logout successful.")
-                self.currentUser = nil
-                self.isAuthenticated = false
+                DispatchQueue.main.async {
+                    self.currentUser = nil
+                    self.isAuthenticated = false
+                }
             case .failure(let error):
+                DispatchQueue.main.async {
+                    self.errorMessage = error.localizedDescription
+                }
                 print("Logout error: \(error.localizedDescription)")
-                self.errorMessage = error.localizedDescription
             }
         }
     }
