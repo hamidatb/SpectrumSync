@@ -2,7 +2,7 @@
 import SwiftUI
 
 struct FriendListView: View {
-    @ObservedObject var friendVM: FriendViewModel
+    @EnvironmentObject var friendVM: FriendViewModel
     
     var body: some View {
         NavigationView {
@@ -26,6 +26,8 @@ struct FriendListView: View {
 
 struct FriendListView_Previews: PreviewProvider {
     static var previews: some View {
-        FriendListView(friendVM: FriendViewModel())
+        let mockFriendVM = FriendViewModel(networkService: MockNetworkManager.shared)
+        FriendListView()
+            .environmentObject(mockFriendVM)
     }
 }

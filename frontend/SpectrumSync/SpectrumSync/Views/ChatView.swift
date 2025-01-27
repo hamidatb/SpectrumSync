@@ -2,8 +2,8 @@
 import SwiftUI
 
 struct ChatView: View {
-    @ObservedObject var chatVM: ChatViewModel
-    
+    @EnvironmentObject var chatVM: ChatViewModel
+
     var body: some View {
         NavigationView {
             List(chatVM.chats) { chat in
@@ -23,8 +23,11 @@ struct ChatView: View {
     }
 }
 
+
 struct ChatView_Previews: PreviewProvider {
     static var previews: some View {
-        ChatView(chatVM: ChatViewModel())
+        let mockChatVM = ChatViewModel(networkService: MockNetworkManager.shared)
+        ChatView()
+            .environmentObject(mockChatVM)
     }
 }

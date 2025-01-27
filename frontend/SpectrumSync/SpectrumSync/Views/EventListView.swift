@@ -2,7 +2,7 @@
 import SwiftUI
 
 struct EventListView: View {
-    @ObservedObject var eventVM: EventViewModel
+    @EnvironmentObject var eventVM: EventViewModel
     
     var body: some View {
         NavigationView {
@@ -30,6 +30,8 @@ struct EventListView: View {
 
 struct EventListView_Previews: PreviewProvider {
     static var previews: some View {
-        EventListView(eventVM: EventViewModel())
+        let mockEventVM = EventViewModel(networkService: MockNetworkManager.shared)
+        EventListView()
+            .environmentObject(mockEventVM)
     }
 }

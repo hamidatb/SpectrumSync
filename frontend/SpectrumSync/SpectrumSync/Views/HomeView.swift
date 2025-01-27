@@ -1,10 +1,11 @@
+// Views/HomeView.swift
 import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject var authVM: AuthViewModel
-    @StateObject var chatVM = ChatViewModel()
-    @StateObject var eventVM = EventViewModel()
-    @StateObject var friendVM = FriendViewModel()
+    @EnvironmentObject var chatVM: ChatViewModel
+    @EnvironmentObject var eventVM: EventViewModel
+    @EnvironmentObject var friendVM: FriendViewModel
 
     var body: some View {
         VStack {
@@ -15,11 +16,11 @@ struct HomeView: View {
                 .foregroundColor(Color.customBlue)
 
             TabView {
-                ChatView(chatVM: chatVM)
+                ChatView()
                     .tabItem { Label("Chats", systemImage: "message") }
-                EventListView(eventVM: eventVM)
+                EventListView()
                     .tabItem { Label("Events", systemImage: "calendar") }
-                FriendListView(friendVM: friendVM)
+                FriendListView()
                     .tabItem { Label("Friends", systemImage: "person.2") }
                 Button("Logout") {
                     authVM.logout()
@@ -28,6 +29,7 @@ struct HomeView: View {
             }
         }
         .onAppear {
+            print("HomeView has received all environment objects.")
             if let token = authVM.currentUser?.token {
                 chatVM.setToken(token)
                 eventVM.setToken(token)
@@ -37,13 +39,25 @@ struct HomeView: View {
                 friendVM.getFriendsList()
             }
         }
+        .onChange(of: authVM.isAuthenticated) { oldValue, newValue in
+            if newValue {
+                print("HomeView detected isAuthenticated change to true.")
+            }
+        }
     }
 }
 
-
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView()
-            .environmentObject(AuthViewModel())
+        let mockAuthVM = AuthViewModel(networkService: MockNetworkManager.shared)
+        let mockChatVM = ChatViewModel(networkService: MockNetworkManager.shared)
+        let mockEventVM = EventViewModel(networkService: MockNetworkManager.shared)
+        let mockFriendVM = FriendViewModel(networkService: MockNetworkManager.shared)
+
+        return HomeView()
+            .environmentObject(mockAuthVM)
+            .environmentObject(mockChatVM)
+            .environmentObject(mockEventVM)
+            .environmentObject(mockFriendVM)
     }
 }
