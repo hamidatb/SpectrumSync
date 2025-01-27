@@ -8,40 +8,42 @@ struct HomeView: View {
     @EnvironmentObject var friendVM: FriendViewModel
 
     var body: some View {
-        VStack {
-            Text("Hi \(authVM.currentUser?.username ?? "User")!")
-                .font(.title)
-                .fontWeight(.bold)
-                .padding()
-                .foregroundColor(Color.customBlue)
+        NavigationStack { // Use NavigationStack here if needed
+            VStack {
+                Text("Hi \(authVM.currentUser?.username ?? "User")!")
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .padding()
+                    .foregroundColor(Color.customBlue)
 
-            TabView {
-                ChatView()
-                    .tabItem { Label("Chats", systemImage: "message") }
-                EventListView()
-                    .tabItem { Label("Events", systemImage: "calendar") }
-                FriendListView()
-                    .tabItem { Label("Friends", systemImage: "person.2") }
-                Button("Logout") {
-                    authVM.logout()
+                TabView {
+                    ChatView()
+                        .tabItem { Label("Chats", systemImage: "message") }
+                    EventListView()
+                        .tabItem { Label("Events", systemImage: "calendar") }
+                    FriendListView()
+                        .tabItem { Label("Friends", systemImage: "person.2") }
+                    Button("Logout") {
+                        authVM.logout()
+                    }
+                    .tabItem { Label("Logout", systemImage: "arrow.backward") }
                 }
-                .tabItem { Label("Logout", systemImage: "arrow.backward") }
             }
-        }
-        .onAppear {
-            print("HomeView has received all environment objects.")
-            if let token = authVM.currentUser?.token {
-                chatVM.setToken(token)
-                eventVM.setToken(token)
-                friendVM.setToken(token)
-                chatVM.listAllChats()
-                eventVM.getEvents()
-                friendVM.getFriendsList()
+            .onAppear {
+                print("HomeView has received all environment objects.")
+                if let token = authVM.currentUser?.token {
+                    chatVM.setToken(token)
+                    eventVM.setToken(token)
+                    friendVM.setToken(token)
+                    chatVM.listAllChats()
+                    eventVM.getEvents()
+                    friendVM.getFriendsList()
+                }
             }
-        }
-        .onChange(of: authVM.isAuthenticated) { oldValue, newValue in
-            if newValue {
-                print("HomeView detected isAuthenticated change to true.")
+            .onChange(of: authVM.isAuthenticated) { oldValue, newValue in
+                if newValue {
+                    print("HomeView detected isAuthenticated change to true.")
+                }
             }
         }
     }
