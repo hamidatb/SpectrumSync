@@ -1,24 +1,31 @@
-// Views/HomeView.swift
 import SwiftUI
 
 struct HomeView: View {
-    @ObservedObject var authVM: AuthViewModel
+    @EnvironmentObject var authVM: AuthViewModel
     @StateObject var chatVM = ChatViewModel()
     @StateObject var eventVM = EventViewModel()
     @StateObject var friendVM = FriendViewModel()
-    
+
     var body: some View {
-        TabView {
-            ChatView(chatVM: chatVM)
-                .tabItem { Label("Chats", systemImage: "message") }
-            EventListView(eventVM: eventVM)
-                .tabItem { Label("Events", systemImage: "calendar") }
-            FriendListView(friendVM: friendVM)
-                .tabItem { Label("Friends", systemImage: "person.2") }
-            Button("Logout") {
-                authVM.logout()
+        VStack {
+            Text("Hi \(authVM.currentUser?.username ?? "User")!")
+                .font(.title)
+                .fontWeight(.bold)
+                .padding()
+                .foregroundColor(Color.customBlue)
+
+            TabView {
+                ChatView(chatVM: chatVM)
+                    .tabItem { Label("Chats", systemImage: "message") }
+                EventListView(eventVM: eventVM)
+                    .tabItem { Label("Events", systemImage: "calendar") }
+                FriendListView(friendVM: friendVM)
+                    .tabItem { Label("Friends", systemImage: "person.2") }
+                Button("Logout") {
+                    authVM.logout()
+                }
+                .tabItem { Label("Logout", systemImage: "arrow.backward") }
             }
-            .tabItem { Label("Logout", systemImage: "arrow.backward") }
         }
         .onAppear {
             if let token = authVM.currentUser?.token {
@@ -33,8 +40,10 @@ struct HomeView: View {
     }
 }
 
+
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView(authVM: AuthViewModel())
+        HomeView()
+            .environmentObject(AuthViewModel())
     }
 }
