@@ -6,9 +6,9 @@ struct HomeView: View {
     @EnvironmentObject var chatVM: ChatViewModel
     @EnvironmentObject var eventVM: EventViewModel
     @EnvironmentObject var friendVM: FriendViewModel
-
+    
     var body: some View {
-        NavigationStack { // Use NavigationStack here if needed
+        NavigationStack {
             VStack {
                 Text("Hi \(authVM.currentUser?.username ?? "User")!")
                     .font(.title)
@@ -18,7 +18,7 @@ struct HomeView: View {
 
                 TabView {
                     ChatView()
-                        .tabItem { Label("Chats", systemImage: "message") }
+                        .tabItem { Label("Home", systemImage: "house") }
                     EventListView()
                         .tabItem { Label("Events", systemImage: "calendar") }
                     FriendListView()
@@ -28,9 +28,9 @@ struct HomeView: View {
                     }
                     .tabItem { Label("Logout", systemImage: "arrow.backward") }
                 }
+                
             }
             .onAppear {
-                print("HomeView has received all environment objects.")
                 if let token = authVM.currentUser?.token {
                     chatVM.setToken(token)
                     eventVM.setToken(token)
