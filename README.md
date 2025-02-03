@@ -58,7 +58,7 @@
 ## Tech Stack 🛠️
 
 - **Frontend**: Swift for iOS development.
-- **Backend**: Firebase for authentication, real-time database, and cloud storage.
+- **Backend**: Azure Web App and Azure MSSQL databases.
 - **Design Tools**: Figma for UI/UX design.
 
 ---

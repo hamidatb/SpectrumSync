@@ -37,8 +37,8 @@ enum APIError: Error, LocalizedError {
 }
 
 /// The NetworkManager singleton class that handles all network requests.
-final class NetworkManager {
-
+final class NetworkManager: NetworkService {
+    
     static let shared = NetworkManager()
     private init() {}
 
@@ -58,19 +58,19 @@ final class NetworkManager {
     ) {
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
-        
+
         // Set any provided headers.
         if let headers = headers {
             for (key, value) in headers {
                 request.setValue(value, forHTTPHeaderField: key)
             }
         }
-        
+
         request.httpBody = body
-        
+
         // Logging the request details.
         print("[NetworkManager] \(request.httpMethod ?? "") \(request.url?.absoluteString ?? "")")
-        
+
         URLSession.shared.dataTask(with: request) { data, response, error in
             // Handle network errors.
             if let error = error {
@@ -79,7 +79,7 @@ final class NetworkManager {
                 }
                 return
             }
-            
+
             // Validate HTTP response status code.
             if let httpResponse = response as? HTTPURLResponse,
                !(200...299).contains(httpResponse.statusCode) {
@@ -88,14 +88,14 @@ final class NetworkManager {
                 }
                 return
             }
-            
+
             guard let data = data else {
                 DispatchQueue.main.async {
                     completion(.failure(.noData))
                 }
                 return
             }
-            
+
             // Decode the JSON data.
             do {
                 let decodedObject = try JSONDecoder().decode(T.self, from: data)
