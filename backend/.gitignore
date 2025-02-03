@@ -3,3 +3,4 @@ node_modules/
 docs/fake_data.md
 docs/internal_doc.md
 full_diff.txt
+.DS_STORE

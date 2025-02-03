@@ -9,7 +9,7 @@ struct SplashView: View {
         ZStack {
             // Background gradient
             LinearGradient.backgroundGradient
-                .ignoresSafeArea()
+                //.ignoresSafeArea()
             
             // Show the GIF if the splash is active
             if !isActive {

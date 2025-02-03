@@ -6,5 +6,5 @@ struct User: Decodable {
     let userId: Int
     let username: String
     let email: String
-    var token: String?  // JWT for authentication throughout the app
+    var token: String  // JWT for authentication throughout the app
 }

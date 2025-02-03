@@ -1,3 +1,4 @@
+// ViewModels/AuthViewModel.swift
 import Foundation
 import Combine
 
@@ -8,24 +9,16 @@ final class AuthViewModel: ObservableObject {
     @Published var isAuthenticated: Bool = false
     @Published var errorMessage: String?
     
-    private let environment: AppEnvironment
-    
-    init(environment: AppEnvironment) {
-            self.environment = environment
-    }
-
-    init() {
-        print("AuthViewModel initialized")
-    }
-
-    // Base URL for authentication endpoints.
+    private let networkService: NetworkService
     private let authBaseURL = "https://spectrum-sync-backend-g3hnfve7h3fdbuf4.canadacentral-01.azurewebsites.net/api/auth"
     
-    /// Registers a new user.
-    /// - Parameters:
-    ///   - username: User’s desired username.
-    ///   - email: User’s email (will be sent as lowercase).
-    ///   - password: User’s password.
+    // Inject NetworkService
+    init(networkService: NetworkService = NetworkManager.shared) {
+        self.networkService = networkService
+        print("AuthViewModel initialized with networkService: \(networkService)")
+    }
+    
+    // Register a new user.
     func register(username: String, email: String, password: String) {
         print("Register function called with username: \(username), email: \(email)")
         guard let url = URL(string: "\(authBaseURL)/register") else {
@@ -55,7 +48,7 @@ final class AuthViewModel: ObservableObject {
             return
         }
         
-        // **Convert email to lowercase before sending.**
+        // Convert email to lowercase before sending.
         let lowercasedEmail = email.lowercased()
         
         let parameters: [String: Any] = [
@@ -70,9 +63,7 @@ final class AuthViewModel: ObservableObject {
             return
         }
         
-        // Make network request for registration.
-        // Make network request for registration.
-        NetworkManager.shared.request(
+        networkService.request(
             url: url,
             method: .post,
             headers: ["Content-Type": "application/json"],
@@ -82,7 +73,6 @@ final class AuthViewModel: ObservableObject {
             case .success(let authResponse):
                 print("Registration API success: \(authResponse.message)")
                 
-                // Update UI-related properties on the main thread
                 DispatchQueue.main.async {
                     var loggedInUser = authResponse.user
                     loggedInUser.token = authResponse.token
@@ -104,10 +94,7 @@ final class AuthViewModel: ObservableObject {
         }
     }
     
-    /// Logs in an existing user.
-    /// - Parameters:
-    ///   - email: User’s email.
-    ///   - password: User’s password.
+    // Login an existing user.
     func login(email: String, password: String) {
         print("Login function called with email: \(email)")
         guard let url = URL(string: "\(authBaseURL)/login") else {
@@ -117,7 +104,7 @@ final class AuthViewModel: ObservableObject {
         }
         
         let parameters: [String: Any] = [
-            "email": email.lowercased(),  // Optionally lower-case login email as well
+            "email": email.lowercased(),
             "password": password
         ]
         
@@ -127,8 +114,7 @@ final class AuthViewModel: ObservableObject {
             return
         }
         
-        // Make network request for login.
-        NetworkManager.shared.request(
+        networkService.request(
             url: url,
             method: .post,
             headers: ["Content-Type": "application/json"],
@@ -143,6 +129,7 @@ final class AuthViewModel: ObservableObject {
                     loggedInUser.token = authResponse.token
                     self.currentUser = loggedInUser
                     self.isAuthenticated = true
+                    print("LoggedInUser: \(loggedInUser), token: \(String(describing: loggedInUser.token)), isAuthenticated = \(self.isAuthenticated)")
                     print("Login successful! Navigating to HomeView.")
                 }
                 
@@ -160,7 +147,7 @@ final class AuthViewModel: ObservableObject {
         }
     }
     
-    /// Logs out the current user.
+    // Logout the current user.
     func logout() {
         print("Logout function called.")
         guard let url = URL(string: "\(authBaseURL)/logout") else {
@@ -175,7 +162,7 @@ final class AuthViewModel: ObservableObject {
             headers["Authorization"] = "Bearer \(token)"
         }
         
-        NetworkManager.shared.request(
+        networkService.request(
             url: url,
             method: .post,
             headers: headers,
@@ -184,11 +171,15 @@ final class AuthViewModel: ObservableObject {
             switch result {
             case .success:
                 print("Logout successful.")
-                self.currentUser = nil
-                self.isAuthenticated = false
+                DispatchQueue.main.async {
+                    self.currentUser = nil
+                    self.isAuthenticated = false
+                }
             case .failure(let error):
+                DispatchQueue.main.async {
+                    self.errorMessage = error.localizedDescription
+                }
                 print("Logout error: \(error.localizedDescription)")
-                self.errorMessage = error.localizedDescription
             }
         }
     }
