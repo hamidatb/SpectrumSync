@@ -5,7 +5,8 @@ struct HomeView: View {
     @EnvironmentObject var authVM: AuthViewModel
     @EnvironmentObject var chatVM: ChatViewModel
     @EnvironmentObject var eventVM: EventViewModel
-        
+    
+    // TODO: Add a logout button in the top right of this page
     var body: some View {
         NavigationView {
             VStack {
