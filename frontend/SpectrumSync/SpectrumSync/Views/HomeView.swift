@@ -5,39 +5,26 @@ struct HomeView: View {
     @EnvironmentObject var authVM: AuthViewModel
     @EnvironmentObject var chatVM: ChatViewModel
     @EnvironmentObject var eventVM: EventViewModel
-    @EnvironmentObject var friendVM: FriendViewModel
     
+    // TODO: Add a logout button in the top right of this page
     var body: some View {
-        NavigationStack {
+        NavigationView {
             VStack {
                 Text("Hi \(authVM.currentUser?.username ?? "User")!")
                     .font(.title)
                     .fontWeight(.bold)
                     .padding()
                     .foregroundColor(Color.customBlue)
+            } // endof: VStack
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color.paleBlueBg)
 
-                TabView {
-                    ChatView()
-                        .tabItem { Label("Home", systemImage: "house") }
-                    EventListView()
-                        .tabItem { Label("Events", systemImage: "calendar") }
-                    FriendListView()
-                        .tabItem { Label("Friends", systemImage: "person.2") }
-                    Button("Logout") {
-                        authVM.logout()
-                    }
-                    .tabItem { Label("Logout", systemImage: "arrow.backward") }
-                }
-                
-            }
             .onAppear {
                 if let token = authVM.currentUser?.token {
                     chatVM.setToken(token)
                     eventVM.setToken(token)
-                    friendVM.setToken(token)
                     chatVM.listAllChats()
                     eventVM.getEvents()
-                    friendVM.getFriendsList()
                 }
             }
             .onChange(of: authVM.isAuthenticated) { oldValue, newValue in
@@ -45,7 +32,7 @@ struct HomeView: View {
                     print("HomeView detected isAuthenticated change to true.")
                 }
             }
-        }
+        } // endof: navigationView
     }
 }
 
@@ -54,12 +41,10 @@ struct HomeView_Previews: PreviewProvider {
         let mockAuthVM = AuthViewModel(networkService: MockNetworkManager.shared)
         let mockChatVM = ChatViewModel(networkService: MockNetworkManager.shared)
         let mockEventVM = EventViewModel(networkService: MockNetworkManager.shared)
-        let mockFriendVM = FriendViewModel(networkService: MockNetworkManager.shared)
 
         return HomeView()
             .environmentObject(mockAuthVM)
             .environmentObject(mockChatVM)
             .environmentObject(mockEventVM)
-            .environmentObject(mockFriendVM)
     }
 }

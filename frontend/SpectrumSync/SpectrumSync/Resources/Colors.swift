@@ -26,6 +26,14 @@ extension Color {
     static let customLightBlue = Color(hex: "#BAF4FF")
     static let customBlue = Color(hex: "#1EC6F2")
     static let customDarkBlue = Color(hex: "#072F45")
+    
+    // Navbar Shades
+    static let currNavButtonBgColour = Color(hex: "#80CADE")
+    static let navButtonFgColour = Color(hex: "#A9CED8")
+    static let currNavButtonFgColour = Color(hex: "#FFFFFF")
+    
+    // Background
+    static let paleBlueBg = Color(hex: "#E7FBFF")
 }
 
 // Utility to convert hex color codes to SwiftUI Color
