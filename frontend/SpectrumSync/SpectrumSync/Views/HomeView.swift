@@ -7,6 +7,8 @@ struct HomeView: View {
     @EnvironmentObject var eventVM: EventViewModel
     @EnvironmentObject var friendVM: FriendViewModel
     
+    @State private var selectedTab: Tab = .homeTab
+    
     var body: some View {
         NavigationStack {
             VStack {
@@ -15,19 +17,25 @@ struct HomeView: View {
                     .fontWeight(.bold)
                     .padding()
                     .foregroundColor(Color.customBlue)
-
+                
+                // The home navigation bottom tab
                 TabView {
                     ChatView()
                         .tabItem { Label("Home", systemImage: "house") }
                     EventListView()
-                        .tabItem { Label("Events", systemImage: "calendar") }
+                        .tabItem { Label("Chat", systemImage: "message.fill") }
                     FriendListView()
-                        .tabItem { Label("Friends", systemImage: "person.2") }
-                    Button("Logout") {
-                        authVM.logout()
-                    }
-                    .tabItem { Label("Logout", systemImage: "arrow.backward") }
+                        .tabItem { Label("Calendar", systemImage: "calendar") }
+                    EventListView()
+                        .tabItem { Label("Next Event", systemImage: "clock.fill") }
+                    Button("Logout")
+                        { authVM.logout() }
+                        .tabItem { Label("Logout", systemImage: "arrow.backward") }
                 }
+                
+                Spacer()
+                CustomTabBar(selectedTab: $selectedTab)
+                
                 
             }
             .onAppear {
