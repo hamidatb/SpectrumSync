@@ -25,9 +25,15 @@ struct CustomTabBar: View {
                 // For each tab id, add a button
                 VStack {
                     Image(systemName: tab.iconName)
-                    Text(tab.title)
-                        .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
-                        .font(.headline)
+                        // Make the icons larger if they aren't the currently selected icons
+                        .font(.system(size: selectedTab == tab ? 20 : 25))
+                    if selectedTab == tab {
+                        Text(tab.title)
+                            .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+                            .font(.headline)
+                    }
+          
+
                 } // endof: tabButtonVStack
                 
                 // Style each of the navigation buttons
@@ -35,17 +41,17 @@ struct CustomTabBar: View {
                 .foregroundColor(selectedTab == tab ? Color.currNavButtonFgColour : Color.navButtonFgColour) // Make the selected tab blue, the rest gray
                 
                 // Order of width, background and radius matters.
-                .frame(width: selectedTab == tab ? 120 : 55)
+                .frame(width: selectedTab == tab ? 150 : 55)
                 .background(selectedTab == tab ? Color.currNavButtonBgColour : .clear ) // Give the selected tab a coloured background
                 .cornerRadius(20) // Round the background boxes to give a more button feel
 
                 
                 .onTapGesture {
                     // Use withAnimation for a smooth change
-                    withAnimation(.easeOut(duration:0.3)) {
+                    withAnimation(.easeIn(duration:0.3)) {
                         selectedTab = tab
-                    }
-                }
+}
+                } // end: onTapGesture
             }
         } // endof: HStack
         .frame(height: 60)

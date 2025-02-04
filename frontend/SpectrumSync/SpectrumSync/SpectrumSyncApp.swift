@@ -33,11 +33,11 @@ struct SpectrumSyncApp: App {
     var body: some Scene {
         WindowGroup {
             if authViewModel.isAuthenticated {
-                HomeView()
+                MainView()
                     .environmentObject(authViewModel)
-                    .environmentObject(chatViewModel) // Add this
-                    .environmentObject(eventViewModel) // Add this
-                    .environmentObject(friendViewModel) // Add this
+                    .environmentObject(chatViewModel)
+                    .environmentObject(eventViewModel)
+                    .environmentObject(friendViewModel)
             } else {
                 SplashView()
                     .environmentObject(authViewModel)

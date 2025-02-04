@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwiftUI // need this for views
 
 
 // Separting the cases for clear readability
@@ -17,8 +18,7 @@ enum Tab: CaseIterable {
     case calendarTab
     case eventTab
     
-    
-    // Compute the properties for the icon and title
+    // computed property: title of the navbar label
     var title: String {
         switch self {
         case .homeTab: return "Home"
@@ -28,12 +28,24 @@ enum Tab: CaseIterable {
         }
     }
     
+    // computed property: iconName
     var iconName: String {
         switch self {
         case .homeTab: return "house.fill"
         case .chatTab: return "message.fill"
         case .calendarTab: return "calendar"
         case .eventTab: return "clock.fill"
+        }
+    }
+    
+    // note: enums can't return Views so I have to use a function (enums use computed values)
+    // method: getView to return the view of a model
+    func getView() -> AnyView {
+        switch self {
+        case .homeTab: return AnyView(HomeView())
+        case .chatTab: return AnyView(ChatView())
+        case .calendarTab: return AnyView(EventListView())
+        case .eventTab: return AnyView(EventListView())
         }
     }
 }
