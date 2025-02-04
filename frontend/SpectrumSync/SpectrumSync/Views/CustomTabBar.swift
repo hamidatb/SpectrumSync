@@ -8,6 +8,11 @@
 import SwiftUI
 
 struct CustomTabBar: View {
+    @EnvironmentObject var authVM: AuthViewModel
+    @EnvironmentObject var chatVM: ChatViewModel
+    @EnvironmentObject var eventVM: EventViewModel
+    @EnvironmentObject var friendVM: FriendViewModel
+    
     // @Binding means that the variable isn't ownder by CustomTabBar, but is being controlled by whatever parent view is calling this.
     // I'm using @State for that in the parent views
     @Binding var selectedTab: Tab // Pass the selected tab from the parent
@@ -21,12 +26,26 @@ struct CustomTabBar: View {
                 VStack {
                     Image(systemName: tab.iconName)
                     Text(tab.title)
+                        .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+                        .font(.headline)
                 } // endof: tabButtonVStack
+                
+                // Style each of the navigation buttons
                 .padding() // Padding inside each icons "box" (NOT MARGIN)
-                .foregroundColor(selectedTab == tab ? .blue : .gray) // Make the selected tab blue, the rest gray
-                .background(selectedTab == tab ? .green : .red ) // Give the selected tab a coloured background
-                .cornerRadius(25) // Round the background boxes to give a more button feel
-                .onTapGesture { selectedTab = tab }
+                .foregroundColor(selectedTab == tab ? Color.currNavButtonFgColour : Color.navButtonFgColour) // Make the selected tab blue, the rest gray
+                
+                // Order of width, background and radius matters.
+                .frame(width: selectedTab == tab ? 120 : 55)
+                .background(selectedTab == tab ? Color.currNavButtonBgColour : .clear ) // Give the selected tab a coloured background
+                .cornerRadius(20) // Round the background boxes to give a more button feel
+
+                
+                .onTapGesture {
+                    // Use withAnimation for a smooth change
+                    withAnimation(.easeOut(duration:0.3)) {
+                        selectedTab = tab
+                    }
+                }
             }
         } // endof: HStack
         .frame(height: 60)
