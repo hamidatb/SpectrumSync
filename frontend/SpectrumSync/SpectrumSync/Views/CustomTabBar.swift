@@ -27,13 +27,15 @@ struct CustomTabBar: View {
                     Image(systemName: tab.iconName)
                         // Make the icons larger if they aren't the currently selected icons
                         .font(.system(size: selectedTab == tab ? 20 : 25))
-                    if selectedTab == tab {
-                        Text(tab.title)
-                            .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
-                            .font(.headline)
-                    }
-          
+                        .animation(.smooth(duration: 0.3), value: selectedTab) // Animate the change
 
+                    Text(tab.title)
+                        .fontWeight(.bold)
+                        .font(.headline)
+                        .opacity(selectedTab == tab ? 1 : 0) // Smooth fade in/out
+                        .scaleEffect(selectedTab == tab ? 1 : 0) //  Grow when selected
+                        .animation(.smooth(duration: 0.3), value: selectedTab) // Animate the change
+    
                 } // endof: tabButtonVStack
                 
                 // Style each of the navigation buttons
