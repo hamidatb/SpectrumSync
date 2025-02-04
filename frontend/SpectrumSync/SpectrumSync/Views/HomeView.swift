@@ -15,7 +15,10 @@ struct HomeView: View {
                     .fontWeight(.bold)
                     .padding()
                     .foregroundColor(Color.customBlue)
-            }
+            } // endof: VStack
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color.paleBlueBg)
+
             .onAppear {
                 if let token = authVM.currentUser?.token {
                     chatVM.setToken(token)
@@ -29,7 +32,7 @@ struct HomeView: View {
                     print("HomeView detected isAuthenticated change to true.")
                 }
             }
-        }
+        } // endof: navigationView
     }
 }
 

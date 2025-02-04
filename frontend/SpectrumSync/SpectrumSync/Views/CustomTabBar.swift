@@ -41,10 +41,9 @@ struct CustomTabBar: View {
                 .foregroundColor(selectedTab == tab ? Color.currNavButtonFgColour : Color.navButtonFgColour) // Make the selected tab blue, the rest gray
                 
                 // Order of width, background and radius matters.
-                .frame(width: selectedTab == tab ? 150 : 55)
+                .frame(width: selectedTab == tab ? 150 : 55, height: 70)
                 .background(selectedTab == tab ? Color.currNavButtonBgColour : .clear ) // Give the selected tab a coloured background
                 .cornerRadius(20) // Round the background boxes to give a more button feel
-
                 
                 .onTapGesture {
                     // Use withAnimation for a smooth change
@@ -54,7 +53,8 @@ struct CustomTabBar: View {
                 } // end: onTapGesture
             }
         } // endof: HStack
-        .frame(height: 60)
+        .frame(height: 90)
+        .frame(maxWidth: .infinity) // Make the navbar take full width
         .background(.white)
     } // endof: body
 }
