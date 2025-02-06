@@ -18,16 +18,6 @@
 - **Connect** 🤝: Stay in touch with the entire family effortlessly.
 - **Update** 🔄: Share updates and stay informed with schedule adjustments.
 - **Manage** 📅: Organize routines and tasks with an easy-to-use interface.
-
----
-
-### Group Messaging 💬
-![Group Messaging](./FigmaDesigns/MssgAndCal.png)
-
-- 📡 Real-time messaging with family members.
-- 🔔 Share updates, reminders, and thoughts to keep everyone on the same page.
-- ✅ Designed for clarity and ease of use.
-
 ---
 
 ### Calendar and Scheduling 🗓️
@@ -40,7 +30,7 @@
 
 ### Onboarding and Authentication 🔐
 
-- 🆕 Easy account creation with options for Google, Apple, or Email.
+- 🆕 Easy account creation.
 - 🔒 Secure login for each family member.
 - 🛠️ Friendly onboarding process to guide users through features.
 
@@ -104,7 +94,6 @@ Spectrum Sync is released under the [MIT License](./LICENSE). Feel free to use, 
 ## Acknowledgments 🙏
 
 - 🌟 Special thanks to the families and caregivers who inspired the creation of Spectrum Sync.
-- 🎉 Gratitude to our design and development team for their dedication to accessibility and usability.
 
 ---
 
