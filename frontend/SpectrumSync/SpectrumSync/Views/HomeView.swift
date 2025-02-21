@@ -10,13 +10,91 @@ struct HomeView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Text("Hi \(authVM.currentUser?.username ?? "User")!")
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .padding()
-                    .foregroundColor(Color.customBlue)
+                HStack(alignment: .top) {
+                    VStack (alignment: .leading)  {
+                        Text("Hi \(authVM.currentUser?.username ?? "User") 🤩")
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                            .foregroundColor(Color.customDarkBlue)
+                        
+                        Text("What would you like to do?")
+                            .font(.subheadline)
+                            .fontWeight(.regular)
+                            .foregroundColor(Color.customDarkBlue)
+                        
+                        } // end of the title VStack
+                    .frame(maxWidth: .infinity)
+                    .frame(height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/)
+                    //.background(.blue)
+                    
+                    .padding(.top, 40)
+                    //Spacer() // push SpecSync logo to the right
+                    
+                    Image("LogoDark")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 100, height: 100)
+                        .padding(.top, 40)
+                        .opacity(0.9)
+                        //.background(.green)
+                    
+                    } // end of the title HStack
+                .padding(.horizontal, 20)
+                //.background(.red)
+                
+                // Button to move the the EventView
+                NavigationLink(destination: EventListView()) {
+                    Text("See Your Events")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding(10)
+                        .frame(maxWidth: .infinity)
+                        .frame(width: 300, height: 100)
+
+                }
+                .background(Color.customBlue)
+                .frame(maxWidth: 300, idealHeight: 300)
+                .cornerRadius(10)
+                .contentMargins(100)
+                .padding(20)
+
+                
+                // Button to move to the chat view
+                NavigationLink(destination: ChatView()) {
+                    Text("Ask About Your Events")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding(10)
+                        .frame(maxWidth: .infinity)
+                        .frame(width: 300, height: 100)
+
+                }
+                .background(Color.customBlue)
+                .frame(maxWidth: 300, idealHeight: 300)
+                .cornerRadius(10)
+                .contentMargins(100)
+                .padding(20)
+
+                
+                // Button to move the the AddEventView
+                NavigationLink(destination: AddEventView()) {
+                    Text("Add A New event")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding(10)
+                        .frame(maxWidth: .infinity)
+                        .frame(width: 300, height: 100)
+
+                }
+                .background(Color.customBlue)
+                .frame(maxWidth: 300, idealHeight: 300)
+                .cornerRadius(10)
+                .contentMargins(100)
+                .padding(20)
+
+
             } // endof: VStack
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment:.top)
             .background(Color.paleBlueBg)
 
             .onAppear {

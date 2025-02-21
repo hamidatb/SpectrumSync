@@ -2,7 +2,8 @@
 import SwiftUI
 
 struct AddEventView: View {
-    @ObservedObject var eventVM: EventViewModel
+    @EnvironmentObject var eventVM: EventViewModel
+    
     @State private var title = ""
     @State private var description = ""
     @State private var date = Date()
@@ -29,6 +30,8 @@ struct AddEventView: View {
 
 struct AddEventView_Previews: PreviewProvider {
     static var previews: some View {
-        AddEventView(eventVM: EventViewModel())
+        let mockEventVM = EventViewModel(networkService: MockNetworkManager.shared)
+        AddEventView()
+            .environmentObject(mockEventVM)
     }
 }

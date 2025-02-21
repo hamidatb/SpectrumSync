@@ -18,11 +18,9 @@ struct EventListView: View {
                         .font(.caption)
                 }
             }
-            .navigationTitle("Events")
+            .navigationTitle("Event Calendar View")
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink("Add Event", destination: AddEventView(eventVM: eventVM))
-                }
+                // TODO: implement the toolbar
             }
         }
     }

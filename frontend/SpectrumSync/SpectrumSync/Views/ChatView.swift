@@ -1,4 +1,5 @@
 // Views/ChatView.swift
+// TODO - Remove this depreciated view 
 import SwiftUI
 
 struct ChatView: View {
