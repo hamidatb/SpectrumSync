@@ -43,7 +43,7 @@ enum Tab: CaseIterable {
     func getView() -> AnyView {
         switch self {
         case .homeTab: return AnyView(HomeView())
-        case .chatTab: return AnyView(ChatView())
+        case .chatTab: return AnyView(HomeView())
         case .calendarTab: return AnyView(EventListView())
         case .eventTab: return AnyView(EventListView())
         }
