@@ -60,7 +60,7 @@ struct HomeView: View {
 
                 
                 // Button to move to the chat view
-                NavigationLink(destination: ChatView()) {
+                NavigationLink(destination: HomeView()) {
                     Text("Ask About Your Events")
                         .font(.headline)
                         .foregroundColor(.white)
