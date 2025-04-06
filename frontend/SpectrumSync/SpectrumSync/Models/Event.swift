@@ -10,6 +10,7 @@ struct Event: Codable, Identifiable {
     let location: String
     let userId: Int
     let createdAt: String?
+    let withWho: String?
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -19,5 +20,6 @@ struct Event: Codable, Identifiable {
         case location
         case userId = "userId"
         case createdAt = "created_at"
+        case withWho = "no_one"
     }
 }

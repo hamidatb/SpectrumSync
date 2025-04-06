@@ -46,8 +46,8 @@ final class MockNetworkManager: NetworkService {
             // Handle Event Endpoints
             if path.contains("/events"), T.self == [Event].self {
                 let mockEvents = [
-                    Event(id: 1, title: "Mock Event 1", description: "Description for Mock Event 1", date: "2025-02-01", location: "Mock Location 1", userId: 1, createdAt: "2025-01-01T10:00:00Z"),
-                    Event(id: 2, title: "Mock Event 2", description: "Description for Mock Event 2", date: "2025-03-15", location: "Mock Location 2", userId: 1, createdAt: "2025-01-02T11:30:00Z")
+                    Event(id: 1, title: "Mock Event 1", description: "Description for Mock Event 1", date: "2025-02-01", location: "Mock Location 1", userId: 1, createdAt: "2025-01-01T10:00:00Z", withWho: nil),
+                    Event(id: 2, title: "Mock Event 2", description: "Description for Mock Event 2", date: "2025-03-15", location: "Mock Location 2", userId: 1, createdAt: "2025-01-02T11:30:00Z",  withWho: nil)
                 ]
                 completion(.success(mockEvents as! T))
                 return
@@ -55,8 +55,8 @@ final class MockNetworkManager: NetworkService {
             
             if path.contains("/events/invites"), T.self == [Event].self {
                 let mockInvites = [
-                    Event(id: 3, title: "Invited Event 1", description: "You are invited to this event.", date: "2025-04-20", location: "Invitation Location 1", userId: 2, createdAt: "2025-01-03T12:45:00Z"),
-                    Event(id: 4, title: "Invited Event 2", description: "Join us for this event.", date: "2025-05-10", location: "Invitation Location 2", userId: 3, createdAt: "2025-01-04T14:00:00Z")
+                    Event(id: 3, title: "Invited Event 1", description: "You are invited to this event.", date: "2025-04-20", location: "Invitation Location 1", userId: 2, createdAt: "2025-01-03T12:45:00Z",  withWho: nil),
+                    Event(id: 4, title: "Invited Event 2", description: "Join us for this event.", date: "2025-05-10", location: "Invitation Location 2", userId: 3, createdAt: "2025-01-04T14:00:00Z",  withWho: nil)
                 ]
                 completion(.success(mockInvites as! T))
                 return
