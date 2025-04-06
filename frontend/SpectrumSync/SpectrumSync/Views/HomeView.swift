@@ -12,8 +12,8 @@ struct HomeView: View {
             VStack {
                 HStack(alignment: .top) {
                     VStack (alignment: .leading)  {
-                        Text("Hi \(authVM.currentUser?.username ?? "User") 🤩")
-                            .font(.largeTitle)
+                        Text("Hi \(authVM.currentUser?.username ?? "User")")
+                            .font(.title)
                             .fontWeight(.bold)
                             .foregroundColor(Color.customDarkBlue)
                         
@@ -25,7 +25,6 @@ struct HomeView: View {
                         } // end of the title VStack
                     .frame(maxWidth: .infinity)
                     .frame(height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/)
-                    //.background(.blue)
                     
                     .padding(.top, 40)
                     //Spacer() // push SpecSync logo to the right
@@ -36,55 +35,54 @@ struct HomeView: View {
                         .frame(width: 100, height: 100)
                         .padding(.top, 40)
                         .opacity(0.9)
-                        //.background(.green)
                     
                     } // end of the title HStack
                 .padding(.horizontal, 20)
                 //.background(.red)
                 
-                // Button to move the the EventView
-                NavigationLink(destination: EventListView()) {
-                    Text("See Your Events")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding(10)
-                        .frame(maxWidth: .infinity)
-                        .frame(width: 300, height: 100)
-
-                }
-                .background(Color.customBlue)
-                .frame(maxWidth: 300, idealHeight: 300)
-                .cornerRadius(10)
-                .contentMargins(100)
-                .padding(20)
-
                 
-                // Button to move to the chat view
-                NavigationLink(destination: HomeView()) {
-                    Text("Ask About Your Events")
+                // -------------- The three buttons in the middle of the page
+                // Button to move the the EventView
+                NavigationLink(destination: CalendarView()) {
+                    Text("See Your Schedule")
                         .font(.headline)
                         .foregroundColor(.white)
                         .padding(10)
                         .frame(maxWidth: .infinity)
                         .frame(width: 300, height: 100)
+                    }
+                    .background(Color.customBlue)
+                    .frame(maxWidth: 300, idealHeight: 300)
+                    .cornerRadius(10)
+                    .contentMargins(100)
+                    .padding(20)
 
-                }
-                .background(Color.customBlue)
-                .frame(maxWidth: 300, idealHeight: 300)
-                .cornerRadius(10)
-                .contentMargins(100)
-                .padding(20)
 
                 
                 // Button to move the the AddEventView
                 NavigationLink(destination: AddEventView()) {
-                    Text("Add A New event")
+                    Text("Add An Event")
                         .font(.headline)
                         .foregroundColor(.white)
                         .padding(10)
                         .frame(maxWidth: .infinity)
                         .frame(width: 300, height: 100)
 
+                }
+                .background(Color.customBlue)
+                .frame(maxWidth: 300, idealHeight: 300)
+                .cornerRadius(10)
+                .contentMargins(100)
+                .padding(20)
+                
+                // Button to move to the chat view
+                NavigationLink(destination: ChatView()) {
+                    Text("Ask About Your Schedule")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding(10)
+                        .frame(maxWidth: .infinity)
+                        .frame(width: 300, height: 100)
                 }
                 .background(Color.customBlue)
                 .frame(maxWidth: 300, idealHeight: 300)

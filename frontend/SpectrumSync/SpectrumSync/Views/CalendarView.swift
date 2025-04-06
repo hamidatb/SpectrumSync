@@ -42,11 +42,6 @@ private extension CalendarView {
             .monthsTopPadding(42)
     }
 }
-// private extension CalendarView {
-   //  func buildDayView(_ date: Date, _ isCurrentMonth: Bool, selectedDate: Binding<Date?>?, range: Binding<MDateRange?>?) -> DV.ColoredRectangle {
-        // return .init(date: date, color: getDateColor(date), isCurrentMonth: isCurrentMonth, selectedDate: selectedDate, selectedRange: nil)
-    // }
-// }
 
 private extension CalendarView {
     func onContinueButtonTap() { }
