@@ -14,7 +14,6 @@ struct MainView: View {
         NavigationStack {
             VStack (spacing:0){
                 selectedTab.getView() // dynamically load the selected view
-                CustomTabBar(selectedTab: $selectedTab) // Tab bar updates the state
             }
         }
     }

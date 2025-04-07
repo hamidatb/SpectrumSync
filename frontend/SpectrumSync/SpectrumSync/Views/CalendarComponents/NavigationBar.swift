@@ -24,7 +24,7 @@ private extension CalNavigationBar {
         Button(action: onBack) {
             Image(systemName: "chevron.left")
                 .foregroundColor(.customBlue)
-                .font(.system(size: 20, weight: .semibold))
+                .font(.system(size: 30, weight: .bold))
                 .padding(8)
         }
     }

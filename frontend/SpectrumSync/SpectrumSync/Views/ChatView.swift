@@ -7,74 +7,157 @@
 
 import SwiftUI
 
+// MARK: - User Chat Message Model
+// This model represents a single chat message from either the user or the AI.
+struct UserChatMessage: Identifiable {
+    let id = UUID()
+    let sender: MessageSender
+    let content: String
+    let timestamp: Date = Date()
+}
+
+// Enum to distinguish between a user message and an AI message.
+enum MessageSender {
+    case user
+    case ai
+}
+
+// MARK: - Chat Message View Model
+// This view model manages the list of chat messages.
+class ChatMessageViewModel: ObservableObject {
+    @Published var messages: [UserChatMessage] = []
+    
+    init() {
+        // Pre-fill with some demo messages
+        messages = [
+            UserChatMessage(sender: .ai, content: "Hello! How can I help you today?"),
+            UserChatMessage(sender: .user, content: "I need some help with my event schedule."),
+            UserChatMessage(sender: .ai, content: "Sure, I'm here to help with that!")
+        ]
+    }
+    
+    /// Sends a message from the user and appends a demo AI response after a short delay.
+    func sendMessage(_ text: String) {
+        guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
+        
+        let newMessage = UserChatMessage(sender: .user, content: text)
+        messages.append(newMessage)
+        
+        // Simulate a demo AI response after a 1-second delay.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            let response = UserChatMessage(sender: .ai, content: "Demo response to: \(text)")
+            self.messages.append(response)
+        }
+    }
+}
+
+// MARK: - Chat View
 struct ChatView: View {
     
+    // Environment objects for other parts of your app (if needed)
     @EnvironmentObject var authVM: AuthViewModel
-    @EnvironmentObject var chatVM: ChatViewModel
     @EnvironmentObject var eventVM: EventViewModel
+    @Environment(\.dismiss) var dismiss
     
-    // Local state for the message input field
+    // Our custom view model for managing chat messages.
+    @StateObject private var chatMessageVM = ChatMessageViewModel()
+    
+    // Local state for the message input field.
     @State private var messageText = ""
-    
-    
     
     var body: some View {
         NavigationView {
-            VStack {
-                // Add the chat header (back arrow, elipses later)
+            VStack(spacing: 0) {
                 
-                // MARK: The chat header
-                HStack(alignment: .center) {
+                // MARK: - Chat Header
+                HStack {
+                    // Back button placeholder.
                     Button(action: {
-                        // YAYYY the button shows up
-                        // TODO: ADD Actual logic here
+                        dismiss()
                     }) {
                         Image(systemName: "chevron.left")
                             .foregroundColor(.white)
                     }
                     
-                    Text("UserName")
-                        .font(.title)
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 50)
-                    
-                    // Just adding space before the elipses
                     Spacer()
                     
+                    // Chat title (can be the AI's name or a conversation title)
+                    Text("SpectrumSync AI")
+                        .font(.title.bold())
+                        .foregroundColor(.white)
+                    
+                    Spacer()
+                    
+                    // Options button placeholder.
                     Button(action: {
-                        // TODO: ADD Actual logic here
-
+                        // TODO: Implement options menu logic.
                     }) {
                         Image(systemName: "ellipsis")
                             .foregroundColor(.white)
                     }
-                    .padding()
                 }
+                .padding(.horizontal)
+                .frame(height: 80)
                 .background(Color.customBlue)
-                .frame(height:40)
-                .frame(maxWidth: .infinity)
-                .padding(.horizontal, 20)
-
                 
-            // MARK: The chat messages scrollview
+                // MARK: - Chat Messages ScrollView
                 ScrollView {
-                    VStack(alignment: .leading) {
-                        Text("ScrollView PlaceHolder")
+                    VStack(spacing: 12) {
+                        ForEach(chatMessageVM.messages) { message in
+                            HStack {
+                                // Align the message bubble to the left for AI messages and right for user messages.
+                                if message.sender == .user {
+                                    Spacer()
+                                }
+                                
+                                Text(message.content)
+                                    .padding()
+                                    .background(message.sender == .user ? Color.customBlue : Color.gray.opacity(0.2))
+                                    .foregroundColor(message.sender == .user ? .white : .black)
+                                    .cornerRadius(10)
+                                
+                                if message.sender == .ai {
+                                    Spacer()
+                                }
+                            }
+                            .padding(.horizontal)
+                        }
                     }
-                    .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
+                    .padding(.vertical)
                 }
-                .padding(.top, 20)
-                .background(.white)
-                .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
+                .background(Color.white)
                 
-            } // end of the main VStack
-            .padding(.top, 10)
-            .background(.red)
-        } // end of Naviagation View
-        .background(.purple)
-    } // end of body
+                // MARK: - Message Input Field and Send Button
+                HStack {
+                    TextField("Ask SpectrumSync...", text: $messageText)
+                        .padding(12)
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(10)
+                    
+                    Button(action: {
+                        // Send the message and clear the input field.
+                        chatMessageVM.sendMessage(messageText)
+                        messageText = ""
+                    }) {
+                        Image(systemName: "paperplane.fill")
+                            .foregroundColor(.white)
+                            .padding(10)
+                            .background(Color.customBlue)
+                            .clipShape(Circle())
+                    }
+                }
+                .padding()
+                .background(Color.white)
+            }
+            .background(Color("AestheticBackground").ignoresSafeArea())
+        }
+        .navigationBarHidden(true)
+    }
 }
 
+// MARK: - Preview
 #Preview {
     ChatView()
+        .environmentObject(AuthViewModel())
+        .environmentObject(EventViewModel())
 }

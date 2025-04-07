@@ -89,6 +89,19 @@ struct HomeView: View {
                 .cornerRadius(10)
                 .contentMargins(100)
                 .padding(20)
+                
+                // MARK: - Floating Help Button
+                NavigationLink(destination: ParentalSetupGuideView()) {
+                    Image(systemName: "questionmark.circle.fill")
+                        .resizable()
+                        .frame(width: 44, height: 44)
+                        .foregroundColor(.customBlue)
+                        .padding()
+                        .background(Color.white)
+                        .clipShape(Circle())
+                        .padding(.leading, 20)
+                        .padding(.bottom, 20)
+                }
 
 
             } // endof: VStack
