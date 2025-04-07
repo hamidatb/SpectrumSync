@@ -11,6 +11,10 @@ struct EventCardScrollView: View {
     let events: [Event]
 
     var body: some View {
+        // Add the header view
+        CalNavigationBar(logoName: "LogoDark", onBack: {
+            print("TODO - Connect this to the home view")
+        })
         ScrollView {
             VStack(spacing: 16) {
                 ForEach(events.sorted(by: { $0.date < $1.date })) { event in
@@ -65,6 +69,7 @@ struct EventCard: View {
                 .fill(Color.white)
                 .shadow(color: .customBlue.opacity(0.55), radius: 20, x: 0, y: 0)
         )
+        .contentShape(Rectangle()) // 👈 Add this
         .onTapGesture {
             print("TODO: Implement the full event view from clicking an event card")
         }

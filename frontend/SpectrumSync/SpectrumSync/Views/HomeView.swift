@@ -43,7 +43,7 @@ struct HomeView: View {
                 
                 // -------------- The three buttons in the middle of the page
                 // Button to move the the EventView
-                NavigationLink(destination: CalendarView()) {
+                NavigationLink(destination: EventCardScrollView(events: homePreviewEvents)) {
                     Text("See Your Schedule")
                         .font(.headline)
                         .foregroundColor(.white)
@@ -124,3 +124,9 @@ struct HomeView_Previews: PreviewProvider {
             .environmentObject(mockEventVM)
     }
 }
+
+private let homePreviewEvents: [Event] =  [
+    Event(id: 1, title: "Therapy Session", description: "Weekly check-in with therapist.", date: "2025-04-08T10:30:00Z", location: "Wellness Center", userId: 101, createdAt: nil, withWho: "Mom"),
+    Event(id: 2, title: "Art Class", description: nil, date: "2025-04-09T15:00:00Z", location: "Room 204", userId: 101, createdAt: nil, withWho: nil),
+    Event(id: 3, title: "Playdate", description: "Meet with Lily at the park.", date: "2025-04-11T13:00:00Z", location: "River Park", userId: 101, createdAt: nil, withWho: "Mom"),
+]

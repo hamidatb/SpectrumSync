@@ -43,9 +43,16 @@ enum Tab: CaseIterable {
     func getView() -> AnyView {
         switch self {
         case .homeTab: return AnyView(HomeView())
-        case .chatTab: return AnyView(HomeView())
-        case .calendarTab: return AnyView(EventListView())
-        case .eventTab: return AnyView(EventListView())
+        case .chatTab: return AnyView(ChatView())
+        case .calendarTab: return AnyView(EventCardScrollView(events: tabPreviewEvents))
+        case .eventTab: return AnyView(AddEventView())
         }
     }
 }
+
+private let tabPreviewEvents: [Event] =  [
+    Event(id: 1, title: "Therapy Session", description: "Weekly check-in with therapist.", date: "2025-04-08T10:30:00Z", location: "Wellness Center", userId: 101, createdAt: nil, withWho: "Mom"),
+    Event(id: 2, title: "Art Class", description: nil, date: "2025-04-09T15:00:00Z", location: "Room 204", userId: 101, createdAt: nil, withWho: nil),
+    Event(id: 3, title: "Playdate", description: "Meet with Lily at the park.", date: "2025-04-11T13:00:00Z", location: "River Park", userId: 101, createdAt: nil, withWho: "Mom"),
+]
+
