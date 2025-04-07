@@ -14,11 +14,11 @@ extension String {
     /// Returns a formatted date string using the given date style.
     /// - Parameter style: The style to format the date (default is .medium).
     /// - Returns: A formatted date string, or the original string if conversion fails.
-    func formattedDate(style: DateFormatter.Style = .medium) -> String {
+    func formattedDateWithWeekday() -> String {
         let inputFormatter = ISO8601DateFormatter()
         let outputFormatter = DateFormatter()
-        outputFormatter.dateStyle = style
-        
+        outputFormatter.dateFormat = "EEEE, MMM d, yyyy" // e.g. "Wednesday, Apr 10, 2025"
+
         if let date = inputFormatter.date(from: self) {
             return outputFormatter.string(from: date)
         } else {
@@ -82,7 +82,7 @@ struct EventCard: View {
         VStack(alignment: .leading, spacing: 8) {
             // Top row with the event date
             HStack {
-                Text(event.date.formattedDate())
+                Text(event.date.formattedDateWithWeekday())
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                 Spacer()
@@ -159,7 +159,7 @@ struct FullEventView: View {
                     HStack {
                         Image(systemName: "calendar")
                             .foregroundColor(.customBlue)
-                        Text(event.date.formattedDate(style: .long))
+                        Text(event.date.formattedDateWithWeekday())
                             .font(.body)
                             .foregroundColor(.secondary)
                     }
