@@ -146,93 +146,94 @@ struct FullEventView: View {
 
     var body: some View {
         NavigationView {
-            VStack(spacing: 24) {
-                // Event title with a friendly bold font and soft color
-                Text(event.title)
-                    .font(.system(size: 24, weight: .semibold, design: .rounded))
-                    .padding(.top, 30)
-                    .foregroundColor(.customDarkBlue)
-                    .multilineTextAlignment(.center)
+            ZStack {
+                VStack(spacing: 30) {
+                    // Title centered with bold, friendly styling
+                    Text(event.title)
+                        .font(.system(size: 26, weight: .bold, design: .rounded))
+                        .foregroundColor(.customDarkBlue)
+                        .multilineTextAlignment(.center)
+                        .padding(.top, 40)
 
-                // Info container with soft background and rounded corners
-                VStack(alignment: .leading, spacing: 12) {
-                    HStack {
-                        Image(systemName: "calendar")
-                            .foregroundColor(.customBlue)
-                        Text(event.date.formattedDateWithWeekday())
+                    // Information card with rounded corners and a light shadow
+                    VStack(alignment: .leading, spacing: 16) {
+                        HStack {
+                            Image(systemName: "calendar")
+                            Text(event.date.formattedDateWithWeekday())
+                        }
+                        .font(.body)
+                        .foregroundColor(.secondary)
+
+                        if let description = event.description, !description.isEmpty {
+                            HStack(alignment: .top) {
+                                Image(systemName: "note.text")
+                                    .padding(.top, 2)
+                                Text(description)
+                            }
                             .font(.body)
                             .foregroundColor(.secondary)
-                    }
+                        }
 
-                    if let description = event.description, !description.isEmpty {
-                        HStack(alignment: .top) {
-                            Image(systemName: "note.text")
-                                .foregroundColor(.customBlue)
-                                .padding(.top, 2)
-                            Text(description)
-                                .font(.body)
-                                .foregroundColor(.secondary)
+                        if let withWho = event.withWho, !withWho.isEmpty {
+                            HStack {
+                                Image(systemName: "person.2.fill")
+                                Text("With \(withWho)")
+                                    .italic()
+                            }
+                            .font(.body)
+                            .foregroundColor(.secondary)
                         }
                     }
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.white)
+                    .cornerRadius(20)
+                    .shadow(color: Color.customBlue.opacity(0.1), radius: 8, x: 0, y: 4)
+                    .padding(.horizontal)
 
-                    if let withWho = event.withWho, !withWho.isEmpty {
-                        HStack {
-                            Image(systemName: "person.2.fill")
-                                .foregroundColor(.customBlue)
-                            Text("With \(withWho)")
-                                .italic()
-                                .foregroundColor(.secondary)
+                    Spacer()
+
+                    // Action buttons in a horizontal stack
+                    HStack(spacing: 20) {
+                        Button(action: {
+                            print("Edit tapped")
+                            // TODO: Handle edit
+                        }) {
+                            Label("Edit", systemImage: "pencil")
+                                .frame(maxWidth: .infinity, minHeight: 60)
                         }
+                        .buttonStyle(.borderedProminent)
+                        .tint(.customBlue)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+
+                        Button(action: {
+                            print("Delete tapped")
+                            // TODO: Handle delete
+                        }) {
+                            Label("Delete", systemImage: "trash")
+                                .frame(maxWidth: .infinity, minHeight: 60)
+                        }
+                        .buttonStyle(.bordered)
+                        .foregroundColor(.red)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
+                    .padding(.horizontal)
+
+                    // A clearly defined close button
+                    Button("Close") {
+                        onClose()
+                    }
+                    .font(.body)
+                    .foregroundColor(.gray)
+                    .padding(.bottom, 20)
                 }
                 .padding()
-                .frame(maxWidth: .infinity)
-                .background(Color.white)
-                .cornerRadius(20)
-                .shadow(color: Color.customBlue.opacity(0.1), radius: 5)
-
-                Spacer()
-
-                // Action buttons with soft rounded look
-                HStack(spacing: 20) {
-                    Button(action: {
-                        print("Edit tapped")
-                        // TODO: Handle edit
-                    }) {
-                        Label("Edit", systemImage: "pencil")
-                            .frame(maxWidth: .infinity, minHeight: 80)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .tint(.customBlue)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-
-                    Button(action: {
-                        print("Delete tapped")
-                        // TODO: Handle delete
-                    }) {
-                        Label("Delete", systemImage: "trash")
-                            .frame(maxWidth: .infinity, minHeight: 80)
-                    }
-                    .buttonStyle(.bordered)
-                    .foregroundColor(.red)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                }
-                .padding(.horizontal)
-
-                Button("Close") {
-                    onClose()
-                }
-                .font(.body)
-                .foregroundColor(.gray)
-                .padding(.top, 8)
             }
-            .padding()
+            .navigationBarHidden(true)
         }
-        .navigationBarHidden(true)
-
     }
-    
 }
+
 
 
 
