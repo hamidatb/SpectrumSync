@@ -15,9 +15,13 @@ struct AddEventView: View {
     @State private var description = ""
     @State private var date = Date()
     @State private var location = ""
+    @State private var shakeOffset: CGFloat = 0
 
     // Toast flag
     @State private var showConfirmation = false
+    @State private var showErrorToast = false
+    @State private var shakeTrigger: Int = 0
+
 
     var body: some View {
         ZStack {
@@ -62,6 +66,7 @@ struct AddEventView: View {
                         .background(Color.white)
                         .cornerRadius(20)
                         .shadow(color: Color.customBlue.opacity(0.35), radius: 40, x: 0, y: 5)
+                        .modifier(ShakeEffect(shakes: 3, animatableData: CGFloat(shakeTrigger)))
                     }
                     .padding(.horizontal, 24)
                     .padding(.top)
@@ -85,12 +90,44 @@ struct AddEventView: View {
                         .animation(.easeOut(duration: 0.3), value: showConfirmation)
                 }
             }
+            
+            if showErrorToast {
+                VStack {
+                    Spacer()
+                    Text("Please fill in the event title.")
+                        .font(.subheadline)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.red.opacity(0.80))
+                        .foregroundColor(.white)
+                        .cornerRadius(30)
+                        .padding(.horizontal, 40)
+                        .padding(.bottom, 40)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                        .animation(.easeOut(duration: 0.3), value: showErrorToast)
+                }
+            }
+
         }
         .navigationBarHidden(true)
     }
 
     // MARK: - Create Event Logic
     private func handleCreateEvent() {
+        guard !title.trimmingCharacters(in: .whitespaces).isEmpty else {
+            withAnimation {
+                showErrorToast = true
+                shakeTrigger += 1
+            }
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                withAnimation {
+                    showErrorToast = false
+                }
+            }
+            return
+        }
+
         let formatter = ISO8601DateFormatter()
         let dateString = formatter.string(from: date)
 
@@ -105,17 +142,15 @@ struct AddEventView: View {
             showConfirmation = true
         }
 
-        // Hide toast and dismiss view after short delay
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             withAnimation {
                 showConfirmation = false
             }
             dismiss()
         }
-    }
-}
+    }}
 
-// MARK: - Reusable Rounded TextField
+// MARK: - Rounded TextField
 struct RoundedTextField: View {
     var placeholder: String
     @Binding var text: String
@@ -127,6 +162,18 @@ struct RoundedTextField: View {
             .cornerRadius(12)
     }
 }
+
+struct ShakeEffect: GeometryEffect {
+    var shakes: Int
+    var amplitude: CGFloat = 10
+    var animatableData: CGFloat
+
+    func effectValue(size: CGSize) -> ProjectionTransform {
+        let translation = sin(animatableData * .pi * CGFloat(shakes)) * amplitude
+        return ProjectionTransform(CGAffineTransform(translationX: translation, y: 0))
+    }
+}
+
 
 #Preview {
     let mockEventVM = EventViewModel(networkService: MockNetworkManager.shared)
