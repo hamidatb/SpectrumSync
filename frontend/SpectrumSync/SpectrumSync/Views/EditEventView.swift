@@ -36,7 +36,7 @@ struct EditEventView: View {
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                ScrollView {
+                VStack {
                     VStack(spacing: 24) {
                         Text("Edit Event")
                             .font(.title.bold())

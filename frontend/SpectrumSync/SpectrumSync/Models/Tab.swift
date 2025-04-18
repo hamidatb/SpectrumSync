@@ -44,7 +44,7 @@ enum Tab: CaseIterable {
         switch self {
         case .homeTab: return AnyView(HomeView())
         case .chatTab: return AnyView(ChatView())
-        case .calendarTab: return AnyView(EventCardScrollView(events: tabPreviewEvents))
+        case .calendarTab: return AnyView(CalendarView())
         case .eventTab: return AnyView(AddEventView())
         }
     }
