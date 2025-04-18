@@ -20,12 +20,12 @@ struct EventDetailsView: View {
         VStack(spacing: 20) {
             // MARK: - Top Event Summary
             RoundedRectangle(cornerRadius: 20)
-                .fill(Color.customLightBlue)
+                .fill(Color.customBlue2)
                 .overlay(
                     VStack(spacing: 0) {
                         Image(systemName: "calendar")
                             .font(.system(size: 28))
-                            .foregroundColor(.customDarkBlue)
+                            .foregroundColor(.customBlue3)
 
                         Text(event.title)
                             .font(.title2)
@@ -65,6 +65,7 @@ struct EventDetailsView: View {
                             }
                         }
                     }
+                    .foregroundColor(Color.customBlue3)
                     .padding()
                 )
                 .padding(.horizontal, 30) // Match the top card
@@ -90,8 +91,8 @@ struct EventDetailsView: View {
                 }) {
                     Image(systemName: "trash.circle.fill")
                         .font(.system(size: 36))
-                        .foregroundColor(.white)
-                        .background(Circle().fill(.red).frame(width: 50, height: 50))
+                        .foregroundColor(Color.customBlue)
+                        .background(Circle().fill(Color.customBlue2).frame(width: 50, height: 50))
                         .accessibilityLabel("Delete this event")
                 }
                 .alert("Delete Event?", isPresented: $showDeleteConfirmation) {
@@ -118,7 +119,7 @@ struct EventDetailsView: View {
             .padding(.bottom, 20)
         }
         .padding(.top)
-        .background(Color.customLightBlue.ignoresSafeArea())
+        .background(Color.customBlue2.ignoresSafeArea())
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .navigationDestination(isPresented: $navigateToEdit) {

@@ -87,7 +87,7 @@ struct CalendarView: View {
                 ForEach(weekdays, id: \.self) { day in
                     Text(day)
                         .font(.subheadline)
-                        .foregroundColor(.gray)
+                        .foregroundColor(.customBlue3)
                 }
             }
 
