@@ -72,11 +72,6 @@ struct ChatView: View {
                 
                 // MARK: - Chat Header
                 HStack {
-                    Button(action: { dismiss() }) {
-                        Image(systemName: "chevron.left")
-                            .foregroundColor(.white)
-                    }
-                    
                     Spacer()
                     
                     Text("SpectrumSync AI")
@@ -181,7 +176,6 @@ struct ChatView: View {
                 .background(Color.white)
             }
         }
-        .navigationBarHidden(true)
     }
 }
 

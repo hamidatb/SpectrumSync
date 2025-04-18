@@ -1,48 +1,61 @@
 import SwiftUI
 
-struct AddEventView: View {
+struct EditEventView: View {
+    let event: Event
     @EnvironmentObject var eventVM: EventViewModel
     @Environment(\.dismiss) var dismiss
 
     // MARK: - Fields
-    @State private var title = ""
-    @State private var description = ""
-    @State private var date = Date()
-    @State private var location = ""
-    @State private var withWho = ""
+    @State private var title: String
+    @State private var description: String
+    @State private var date: Date
+    @State private var location: String
+    @State private var withWhoList: [String]
+    @State private var currentWithWho: String = ""
 
     // Feedback
     @State private var showConfirmation = false
     @State private var showErrorToast = false
     @State private var shakeTrigger: Int = 0
     @State private var showDatePicker = false
-    @State private var withWhoList: [String] = []
-    @State private var currentWithWho = ""
 
+    init(event: Event) {
+        self.event = event
+        _title = State(initialValue: event.title)
+        _description = State(initialValue: event.description ?? "")
+        _date = State(initialValue: event.date)
+        _location = State(initialValue: event.location)
 
+        let people = event.withWho?
+            .split(separator: ",")
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) } ?? []
+
+        _withWhoList = State(initialValue: people)
+    }
 
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                VStack {
+                ScrollView {
                     VStack(spacing: 24) {
-                        Text("Add New Event")
+                        Text("Edit Event")
                             .font(.title.bold())
                             .foregroundColor(.customDarkBlue)
                             .padding(.top)
 
                         VStack(alignment: .leading, spacing: 20) {
-                            
-                            labeledField(label: "📝 Title", content: {
+                            labeledField(label: "📝 Title") {
                                 RoundedTextField(placeholder: "Enter event title", text: $title)
-                            })
+                            }
 
-                            labeledField(label: "💬 Description", content: {
+                            labeledField(label: "💬 Description") {
                                 RoundedTextField(placeholder: "Optional", text: $description)
-                            })
+                            }
 
-                            labeledField(label: "📅 Date & Time", content: {
-                                Button(action: { showDatePicker = true }) {
+                            labeledField(label: "📅 Date & Time") {
+                                Button {
+                                    showDatePicker = true
+                                } label: {
                                     HStack {
                                         Text(date.formatted(date: .abbreviated, time: .shortened))
                                             .foregroundColor(.customDarkBlue)
@@ -54,13 +67,13 @@ struct AddEventView: View {
                                     .background(Color.gray.opacity(0.1))
                                     .cornerRadius(12)
                                 }
-                            })
+                            }
 
-                            labeledField(label: "📍 Location", content: {
+                            labeledField(label: "📍 Location") {
                                 RoundedTextField(placeholder: "Where is it?", text: $location)
-                            })
+                            }
 
-                            labeledField(label: "👥 With Who (Optional)", content: {
+                            labeledField(label: "👥 With Who (Optional)") {
                                 VStack(spacing: 8) {
                                     HStack {
                                         TextField("e.g., Mom", text: $currentWithWho)
@@ -68,36 +81,40 @@ struct AddEventView: View {
                                             .background(Color.gray.opacity(0.1))
                                             .cornerRadius(12)
 
-                                        Button(action: {
+                                        Button {
                                             let trimmed = currentWithWho.trimmingCharacters(in: .whitespaces)
                                             guard !trimmed.isEmpty else { return }
                                             withWhoList.append(trimmed)
                                             currentWithWho = ""
-                                        }) {
+                                        } label: {
                                             Image(systemName: "plus.circle.fill")
                                                 .foregroundColor(.customBlue)
                                                 .font(.system(size: 28))
                                         }
                                     }
 
-                                    // Display the list as tags or chips
                                     if !withWhoList.isEmpty {
                                         WrapHStack(items: withWhoList) { name in
-                                            Text(name)
-                                                .font(.footnote)
-                                                .padding(.horizontal, 12)
-                                                .padding(.vertical, 6)
-                                                .background(Color.customLightBlue)
-                                                .foregroundColor(.white)
-                                                .cornerRadius(20)
+                                            HStack(spacing: 4) {
+                                                Text(name)
+                                                Image(systemName: "xmark.circle.fill")
+                                                    .onTapGesture {
+                                                        withWhoList.removeAll { $0 == name }
+                                                    }
+                                            }
+                                            .font(.footnote)
+                                            .padding(.horizontal, 12)
+                                            .padding(.vertical, 6)
+                                            .background(Color.customLightBlue)
+                                            .foregroundColor(.white)
+                                            .cornerRadius(20)
                                         }
                                     }
                                 }
-                            })
+                            }
 
-
-                            Button(action: handleCreateEvent) {
-                                Text("Create Event")
+                            Button(action: handleUpdateEvent) {
+                                Text("Save Changes")
                                     .foregroundColor(.white)
                                     .frame(maxWidth: .infinity)
                                     .padding()
@@ -117,9 +134,8 @@ struct AddEventView: View {
                 }
             }
 
-            // MARK: - Toasts
             if showConfirmation {
-                toast(message: "🎉 Event Created!", color: .customLightBlue)
+                toast(message: "✅ Event Updated!", color: .customLightBlue)
             }
 
             if showErrorToast {
@@ -141,9 +157,7 @@ struct AddEventView: View {
         }
     }
 
-    // MARK: - Helpers
-
-    func handleCreateEvent() {
+    func handleUpdateEvent() {
         guard !title.trimmingCharacters(in: .whitespaces).isEmpty else {
             withAnimation {
                 showErrorToast = true
@@ -155,15 +169,18 @@ struct AddEventView: View {
             return
         }
 
-        let isoDate = ISO8601DateFormatter().string(from: date)
+        _ = ISO8601DateFormatter().string(from: date)
+        let withWhoString = withWhoList.joined(separator: ", ")
 
-        eventVM.createEvent(
-            title: title,
-            description: description,
-            date: isoDate,
-            location: location
-            // withWho: withWho
-        )
+        // TODO: Un-comment when API logic is available
+        // eventVM.updateEvent(
+        //     id: event.id,
+        //     title: title,
+        //     description: description,
+        //     date: isoDate,
+        //     location: location,
+        //     withWho: withWhoString
+        // )
 
         withAnimation {
             showConfirmation = true
@@ -173,7 +190,7 @@ struct AddEventView: View {
         }
     }
 
-    func labeledField<Content: View>(label: String, content: () -> Content) -> some View {
+    func labeledField<Content: View>(label: String, @ViewBuilder content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(label)
                 .font(.subheadline)
@@ -202,89 +219,21 @@ struct AddEventView: View {
     }
 }
 
-// MARK: - Rounded TextField
-struct RoundedTextField: View {
-    var placeholder: String
-    @Binding var text: String
-
-    var body: some View {
-        TextField(placeholder, text: $text)
-            .padding(12)
-            .background(Color.gray.opacity(0.1))
-            .cornerRadius(12)
-    }
-}
-
-struct ShakeEffect: GeometryEffect {
-    var shakes: Int
-    var amplitude: CGFloat = 10
-    var animatableData: CGFloat
-
-    func effectValue(size: CGSize) -> ProjectionTransform {
-        let translation = sin(animatableData * .pi * CGFloat(shakes)) * amplitude
-        return ProjectionTransform(CGAffineTransform(translationX: translation, y: 0))
-    }
-}
-
 
 #Preview {
     let mockEventVM = EventViewModel(networkService: MockNetworkManager.shared)
-    return AddEventView()
+
+    let sampleEvent = Event(
+        id: 1,
+        title: "Therapy Session",
+        description: "Weekly check-in with therapist.",
+        date: isoDate("2025-04-20T10:00:00Z"),
+        location: "Wellness Center",
+        userId: 101,
+        createdAt: isoDate("2025-04-01T09:00:00Z"),
+        withWho: "Mom"
+    )
+
+    return EditEventView(event: sampleEvent)
         .environmentObject(mockEventVM)
-}
-
-struct WrapHStack<T: Hashable, Content: View>: View {
-    var items: [T]
-    var content: (T) -> Content
-
-    @State private var totalHeight: CGFloat = .zero
-
-    var body: some View {
-        GeometryReader { geometry in
-            self.generateContent(in: geometry)
-        }
-        .frame(height: totalHeight)
-    }
-
-    private func generateContent(in geometry: GeometryProxy) -> some View {
-        var width = CGFloat.zero
-        var height = CGFloat.zero
-
-        return ZStack(alignment: .topLeading) {
-            ForEach(items, id: \.self) { item in
-                self.content(item)
-                    .padding(6)
-                    .alignmentGuide(.leading, computeValue: { d in
-                        if abs(width - d.width) > geometry.size.width {
-                            width = 0
-                            height -= d.height
-                        }
-                        let result = width
-                        if item == items.last {
-                            width = 0 // reset at the end
-                        } else {
-                            width -= d.width
-                        }
-                        return result
-                    })
-                    .alignmentGuide(.top, computeValue: { _ in
-                        let result = height
-                        if item == items.last {
-                            height = 0
-                        }
-                        return result
-                    })
-            }
-        }
-        .background(viewHeightReader($totalHeight))
-    }
-
-    private func viewHeightReader(_ binding: Binding<CGFloat>) -> some View {
-        GeometryReader { geo in
-            DispatchQueue.main.async {
-                binding.wrappedValue = geo.size.height
-            }
-            return Color.clear
-        }
-    }
 }

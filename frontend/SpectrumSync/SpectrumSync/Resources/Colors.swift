@@ -26,6 +26,9 @@ extension Color {
     static let customLightBlue = Color(hex: "#BAF4FF")
     static let customBlue = Color(hex: "#1EC6F2")
     static let customDarkBlue = Color(hex: "#072F45")
+    static let customBlue1 = Color(hex: "#ABEDFF")
+    static let customBlue2 = Color(hex: "#CFF7FF")
+    static let customBlue3 = Color(hex: "#2877A4")
     
     // Navbar Shades
     static let currNavButtonBgColour = Color(hex: "#80CADE")

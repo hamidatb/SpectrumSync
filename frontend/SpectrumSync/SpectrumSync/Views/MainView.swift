@@ -15,6 +15,11 @@ struct MainView: View {
             VStack (spacing:0){
                 selectedTab.getView() // dynamically load the selected view
             }
+            CustomTabBar(selectedTab: $selectedTab)
+                .environmentObject(eventVM)
+                .environmentObject(authVM)
+                .environmentObject(chatVM)
+                .environmentObject(friendVM)
         }
     }
 }

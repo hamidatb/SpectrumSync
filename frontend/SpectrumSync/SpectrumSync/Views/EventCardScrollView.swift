@@ -38,34 +38,38 @@ struct EventCardScrollView: View {
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
-        CalNavigationBar(logoName: "LogoDark", onBack: ({
-            dismiss() 
-        }))
-        
-        // ScrollView containing a vertical stack of event cards
-        ScrollView {
-            VStack(spacing: 16) {
-                // Sort events by date and create an EventCard for each
-                ForEach(events.sorted(by: { $0.date < $1.date })) { event in
-                    EventCard(event: event, onTap: {
-                        // Animate the selection of an event card
-                        withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
-                            selectedEvent = event
+        NavigationStack {
+            VStack(spacing: 0) {
+                Text("Today's Events")
+                    .font(.title)
+                    .fontWeight(.regular)
+                    .bold()
+                    .padding()
+                    .foregroundColor(Color.customDarkBlue)
+
+                ScrollView {
+                    VStack(spacing: 16) {
+                        // This is just for demoing the front end, this filtering logic will be moved to the backend
+                        let today = Calendar.current.startOfDay(for: Date())
+                        let filteredEvents = events.filter { Calendar.current.isDate($0.date, inSameDayAs: today) }
+
+                        ForEach(filteredEvents.sorted(by: { $0.date < $1.date })) { event in
+                            EventCard(event: event, onTap: {
+                                withAnimation {
+                                    selectedEvent = event
+                                }
+                            })
                         }
-                    })
+                    }
+                    .padding()
                 }
             }
-            .padding()
+            .navigationDestination(item: $selectedEvent) { event in
+                EventDetailsView(event: event)
+            }
         }
-        // Present the full event view when an event is selected
-        .sheet(item: $selectedEvent) { event in
-            FullEventView(event: event, onClose: {
-                selectedEvent = nil
-            })
-        }
-        .navigationBarHidden(true)
-
     }
+
 }
 
 // MARK: - Event Card View
@@ -229,7 +233,6 @@ struct FullEventView: View {
                 }
                 .padding()
             }
-            .navigationBarHidden(true)
         }
     }
 }
@@ -245,7 +248,34 @@ struct FullEventView: View {
 
 // Sample events for previewing the UI in Xcode.
 private let previewEvents: [Event] =  [
-    Event(id: 1, title: "Therapy Session", description: "Weekly check-in with therapist.", date: "2025-04-08T10:30:00Z", location: "Wellness Center", userId: 101, createdAt: nil, withWho: "Mom"),
-    Event(id: 2, title: "Art Class", description: nil, date: "2025-04-09T15:00:00Z", location: "Room 204", userId: 101, createdAt: nil, withWho: nil),
-    Event(id: 3, title: "Playdate", description: "Meet with Lily at the park.", date: "2025-04-11T13:00:00Z", location: "River Park", userId: 101, createdAt: nil, withWho: "Mom"),
+    Event(
+        id: 1,
+        title: "Therapy Session",
+        description: "Weekly check-in with therapist.",
+        date: isoDate("2025-04-18T10:30:00Z"),
+        location: "Wellness Center",
+        userId: 101,
+        createdAt: nil,
+        withWho: "Mom"
+    ),
+    Event(
+        id: 2,
+        title: "Art Class",
+        description: nil,
+        date: isoDate("2025-04-18T15:00:00Z"),
+        location: "Room 204",
+        userId: 101,
+        createdAt: nil,
+        withWho: nil
+    ),
+    Event(
+        id: 3,
+        title: "Playdate",
+        description: "Meet with Lily at the park.",
+        date: isoDate("2025-04-11T13:00:00Z"),
+        location: "River Park",
+        userId: 101,
+        createdAt: nil,
+        withWho: "Mom"
+    )
 ]
