@@ -45,7 +45,7 @@ struct HomeView: View {
                 }
                 .padding(.horizontal)
                 .padding(.top, 20)
-
+                
                 // Ask About Your Events card
                 RoundedRectangle(cornerRadius: 20)
                     .fill(Color.customLightBlue)
@@ -59,7 +59,7 @@ struct HomeView: View {
                                     .multilineTextAlignment(.leading)
                                     .lineLimit(2)
                                     .foregroundColor(Color.customDarkBlue)
-
+                                
                                 NavigationLink(destination: ChatView()) {
                                     HStack {
                                         Text("Chat")
@@ -74,7 +74,7 @@ struct HomeView: View {
                                     .frame(width: 160)
                                 }
                                 .padding(.top, 5)
-            
+                                
                             }
                             .padding(.horizontal, 10)
                             Spacer()
@@ -84,9 +84,9 @@ struct HomeView: View {
                                 .frame(width: 80, height: 80)
                                 .scaleEffect(1.3)
                                 .padding(.trailing, 20)
-
+                            
                         }
-                        .padding()
+                            .padding()
                     )
                     .padding(.horizontal, 30)
                 
@@ -95,19 +95,19 @@ struct HomeView: View {
                     RoundedRectangle(cornerRadius: 8)
                         .fill(Color.customLightBlue)
                         .frame(width: 250, height: 6)
-
+                    
                     RoundedRectangle(cornerRadius: 8)
                         .fill(Color.customLightBlue)
                         .frame(width: 60, height: 6)
                 }
-
-
+                
+                
                 // Today's date
                 Text("Today is \(formattedTodayDate)")
                     .font(.system(size: 20))
                     .padding(.horizontal)
-
-
+                
+                
                 // Event cards
                 HStack(alignment: .top, spacing: 16) {
                     // Your Next Event
@@ -137,7 +137,7 @@ struct HomeView: View {
                                             .fontWeight(.regular)
                                         Text(formattedEventDate(event: nextEvent))
                                             .font(.system(size: 12, weight: .regular))
-
+                                        
                                         if let with = nextEvent.withWho {
                                             Text("with \(with)")
                                                 .font(.caption)
@@ -155,7 +155,7 @@ struct HomeView: View {
                         .buttonStyle(.plain)
                     }
                     // end of "Your next event card"
-
+                    
                     // Today's Events
                     VStack(alignment: .center, spacing: 8) {
                         NavigationLink(destination: EventCardScrollView(events: previewEvents)) {
@@ -165,7 +165,7 @@ struct HomeView: View {
                                     .foregroundColor(.customDarkBlue)
                                     .multilineTextAlignment(.center)
                                     .frame(maxWidth: .infinity, alignment: .center)
-
+                                
                                 Image("beeRide")
                                     .resizable()
                                     .scaledToFit()
@@ -179,13 +179,14 @@ struct HomeView: View {
                         }
                         .buttonStyle(.plain)
                     }
-
+                    
                 }
                 .padding(.horizontal)
                 Spacer()
-
+                
             }
         }
+        .frame(height: 700)
     }
 }
 

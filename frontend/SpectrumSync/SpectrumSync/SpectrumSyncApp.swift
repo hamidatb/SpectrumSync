@@ -8,6 +8,8 @@ struct SpectrumSyncApp: App {
     @StateObject private var chatViewModel: ChatViewModel
     @StateObject private var eventViewModel: EventViewModel
     @StateObject private var friendViewModel: FriendViewModel
+    @StateObject private var keyboardObserver = KeyboardObserver()
+
     @State private var isAuthenticated = false // Local state mirror
 
     init() {
@@ -33,11 +35,23 @@ struct SpectrumSyncApp: App {
     var body: some Scene {
         WindowGroup {
             if authViewModel.isAuthenticated {
-                MainView()
-                    .environmentObject(authViewModel)
-                    .environmentObject(chatViewModel)
-                    .environmentObject(eventViewModel)
-                    .environmentObject(friendViewModel)
+                if authViewModel.currentUser?.role == "parent" {
+                    ParentMainView()
+                        .environmentObject(authViewModel)
+                        .environmentObject(chatViewModel)
+                        .environmentObject(eventViewModel)
+                        .environmentObject(friendViewModel)
+                        .environmentObject(keyboardObserver)
+
+                } else {
+                    MainView()
+                        .environmentObject(authViewModel)
+                        .environmentObject(chatViewModel)
+                        .environmentObject(eventViewModel)
+                        .environmentObject(friendViewModel)
+                        .environmentObject(keyboardObserver)
+
+                }
             } else {
                 SplashView()
                     .environmentObject(authViewModel)
