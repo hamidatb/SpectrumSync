@@ -9,11 +9,16 @@ struct CalendarView: View {
 
     // MARK: - Mock Events (Replace this with @EnvironmentObject later)
     private let mockEventDates: Set<Date> = [
-        isoDate("2025-04-10T00:00:00Z"),
-        isoDate("2025-04-18T00:00:00Z"),
-        isoDate("2025-04-21T00:00:00Z"),
-        isoDate("2025-01-10T00:00:00Z"),
-        isoDate("2025-02-10T00:00:00Z")
+        // April Events
+            isoDate("2025-04-10T14:00:00Z"), // Doctor's Appointment
+            isoDate("2025-04-18T09:30:00Z"), // Art Class
+            isoDate("2025-04-21T16:45:00Z"), // Playdate at Park
+
+            // January Events
+            isoDate("2025-01-10T11:00:00Z"), // Therapy Session
+
+            // February Events
+            isoDate("2025-02-10T13:15:00Z")  // Parent-Teacher Meeting
     ]
 
     // MARK: - Real Data (uncomment this when ready)
@@ -97,10 +102,15 @@ struct CalendarView: View {
                                 Circle()
                                     .fill(calendar.isDate(date, inSameDayAs: selectedDate) ? Color.customBlue : Color.clear)
                             )
+                        let hasEvent = mockEventDates.contains {
+                            calendar.isDate($0, inSameDayAs: date)
+                        }
 
+
+                        
                         // Blue dot if event exists
                         Circle()
-                            .fill(normalizedEventDates.contains(calendar.startOfDay(for: date)) ? Color.customBlue : Color.clear)
+                            .fill(hasEvent ? Color.customBlue : Color.clear)
                             .frame(width: 6, height: 6)
                     }
                     .onTapGesture {
