@@ -24,18 +24,41 @@ final class MockNetworkManager: NetworkService {
             
             // Handle Auth Endpoints
             if path.contains("/login"), T.self == AuthResponse.self {
-                let mockUser = User(userId: 1, username: "DemoUser", email: "demo@example.com", token: "mockToken")
-                let mockResponse = AuthResponse(message: "Mock user login succesful", token: "mockToken123", user: mockUser)
+                let mockUser = User(
+                    userId: 1,
+                    username: "DemoKid",
+                    email: "demo.kid@example.com",
+                    role: "child",
+                    token: "mockToken",
+                    linkedChildIds: nil
+                )
+                let mockResponse = AuthResponse(
+                    message: "Mock user login successful",
+                    token: "mockToken123",
+                    user: mockUser
+                )
                 completion(.success(mockResponse as! T))
                 return
             }
-            
+
             if path.contains("/register"), T.self == AuthResponse.self {
-                let mockUser = User(userId: 2, username: "NewUser", email: "newuser@example.com", token: "newMockToken456")
-                let mockResponse = AuthResponse(message: "Registration successful", token: "newMockToken456", user: mockUser)
+                let mockUser = User(
+                    userId: 2,
+                    username: "NewKid",
+                    email: "new.kid@example.com",
+                    role: "child",
+                    token: "newMockToken456",
+                    linkedChildIds: nil
+                )
+                let mockResponse = AuthResponse(
+                    message: "Registration successful",
+                    token: "newMockToken456",
+                    user: mockUser
+                )
                 completion(.success(mockResponse as! T))
                 return
             }
+
             
             if path.contains("/logout"), T.self == [String: String].self {
                 let mockResponse = ["message": "Logout successful"]

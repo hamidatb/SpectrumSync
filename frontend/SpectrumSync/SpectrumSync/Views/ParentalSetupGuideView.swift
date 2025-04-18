@@ -18,12 +18,12 @@ struct ParentalSetupGuideView: View {
             VStack(alignment: .leading, spacing: 32) {
 
                 // MARK: - Header
-                Text("Parental Setup Guide")
+                Text("SpectrumSync Parental Guide")
                     .font(.system(size: 28, weight: .bold, design: .rounded))
                     .foregroundColor(.customDarkBlue)
                     .padding(.top, 10)
 
-                Text("Welcome! SpectrumSync is a supportive app designed to help children manage their daily routines and events independently.")
+                Text("Hi! SpectrumSync is a supportive app designed to help children manage their daily routines and events independently.")
                     .font(.body)
                     .foregroundColor(.secondary)
 

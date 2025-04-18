@@ -9,7 +9,6 @@ struct DateEventsView: View {
     @State private var selectedEvent: Event?
 
     var body: some View {
-        NavigationStack {
             VStack(spacing: 0) {
                 Text("Events for \(date.formatted(date: .abbreviated, time: .omitted))")
                     .font(.title2.bold())
@@ -23,7 +22,7 @@ struct DateEventsView: View {
 
                     if dayEvents.isEmpty {
                         Text("No events scheduled.")
-                            .foregroundColor(.gray)
+                            .foregroundColor(Color.customBlue3)
                             .italic()
                             .padding(.top, 40)
                     } else {
@@ -40,7 +39,6 @@ struct DateEventsView: View {
             }
             .navigationDestination(item: $selectedEvent) { event in
                 EventDetailsView(event: event)
-            }
         }
     }
 }

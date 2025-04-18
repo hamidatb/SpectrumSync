@@ -17,6 +17,8 @@ enum Tab: CaseIterable {
     case chatTab
     case calendarTab
     case eventTab
+    case settingsTab
+
     
     // computed property: title of the navbar label
     var title: String {
@@ -25,6 +27,7 @@ enum Tab: CaseIterable {
         case .chatTab: return "Chat"
         case .calendarTab: return "Calendar"
         case .eventTab: return "Event"
+        case .settingsTab: return "Settings"
         }
     }
     
@@ -35,6 +38,7 @@ enum Tab: CaseIterable {
         case .chatTab: return "message.fill"
         case .calendarTab: return "calendar"
         case .eventTab: return "clock.fill"
+        case .settingsTab: return "gearshape.fill"
         }
     }
     
@@ -46,6 +50,7 @@ enum Tab: CaseIterable {
         case .chatTab: return AnyView(ChatView())
         case .calendarTab: return AnyView(AllEventsView())
         case .eventTab: return AnyView(AddEventView())
+        case .settingsTab: return AnyView(SettingsView())
         }
     }
 }

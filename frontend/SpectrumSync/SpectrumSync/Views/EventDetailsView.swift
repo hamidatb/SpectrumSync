@@ -15,8 +15,6 @@ struct EventDetailsView: View {
 
 
     var body: some View {
-        NavigationStack {
-
         VStack(spacing: 20) {
             // MARK: - Top Event Summary
             RoundedRectangle(cornerRadius: 20)
@@ -135,7 +133,7 @@ struct EventDetailsView: View {
                         .background(RoundedRectangle(cornerRadius: 12).fill(Color.white))
                         .shadow(radius: 10)
                 }
-                }
+                
             }
         }
         

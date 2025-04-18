@@ -38,7 +38,6 @@ struct EventCardScrollView: View {
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
-        NavigationStack {
             VStack(spacing: 0) {
                 Text("Today's Events")
                     .font(.title)
@@ -66,7 +65,6 @@ struct EventCardScrollView: View {
             }
             .navigationDestination(item: $selectedEvent) { event in
                 EventDetailsView(event: event)
-            }
         }
     }
 
@@ -139,106 +137,6 @@ struct EventCard: View {
         }
     }
 }
-
-// MARK: - Full Event View
-/// A detailed view for a selected event, presented as a modal.
-/// Provides a minimalist layout with options to edit or delete the event.
-// MARK: - Full Event View (Minimalist + Kid-Friendly)
-struct FullEventView: View {
-    let event: Event
-    var onClose: () -> Void
-
-    var body: some View {
-        NavigationView {
-            ZStack {
-                VStack(spacing: 30) {
-                    // Title centered with bold, friendly styling
-                    Text(event.title)
-                        .font(.system(size: 26, weight: .bold, design: .rounded))
-                        .foregroundColor(.customDarkBlue)
-                        .multilineTextAlignment(.center)
-                        .padding(.top, 40)
-
-                    // Information card with rounded corners and a light shadow
-                    VStack(alignment: .leading, spacing: 16) {
-                        HStack {
-                            Image(systemName: "calendar")
-                            Text(event.date.formattedDateWithWeekday())
-                        }
-                        .font(.body)
-                        .foregroundColor(.secondary)
-
-                        if let description = event.description, !description.isEmpty {
-                            HStack(alignment: .top) {
-                                Image(systemName: "note.text")
-                                    .padding(.top, 2)
-                                Text(description)
-                            }
-                            .font(.body)
-                            .foregroundColor(.secondary)
-                        }
-
-                        if let withWho = event.withWho, !withWho.isEmpty {
-                            HStack {
-                                Image(systemName: "person.2.fill")
-                                Text("With \(withWho)")
-                                    .italic()
-                            }
-                            .font(.body)
-                            .foregroundColor(.secondary)
-                        }
-                    }
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.white)
-                    .cornerRadius(20)
-                    .shadow(color: Color.customBlue.opacity(0.1), radius: 8, x: 0, y: 4)
-                    .padding(.horizontal)
-
-                    Spacer()
-
-                    // Action buttons in a horizontal stack
-                    HStack(spacing: 20) {
-                        Button(action: {
-                            print("Edit tapped")
-                            // TODO: Handle edit
-                        }) {
-                            Label("Edit", systemImage: "pencil")
-                                .frame(maxWidth: .infinity, minHeight: 60)
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .tint(.customBlue)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-
-                        Button(action: {
-                            print("Delete tapped")
-                            // TODO: Handle delete
-                        }) {
-                            Label("Delete", systemImage: "trash")
-                                .frame(maxWidth: .infinity, minHeight: 60)
-                        }
-                        .buttonStyle(.bordered)
-                        .foregroundColor(.red)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                    }
-                    .padding(.horizontal)
-
-                    // A clearly defined close button
-                    Button("Close") {
-                        onClose()
-                    }
-                    .font(.body)
-                    .foregroundColor(.gray)
-                    .padding(.bottom, 20)
-                }
-                .padding()
-            }
-        }
-    }
-}
-
-
-
 
 // MARK: - Preview Provider
 /// Provides sample data for SwiftUI previews.
