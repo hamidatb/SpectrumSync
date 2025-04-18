@@ -27,18 +27,19 @@ struct AllEventsView: View {
                 // Calendar Grid
                 CalendarView()
 
-                // Events for selected day
-                let todaysEvents = events.filter {
-                    Calendar.current.isDate($0.date, inSameDayAs: selectedDate)
-                }
+                // Events from today and into the future
+                let upcomingEvents = events
+                    .filter { $0.date >= Calendar.current.startOfDay(for: Date()) }
+                    .sorted(by: { $0.date < $1.date })
 
+                // All Events List (not just for selected date)
                 ScrollView {
                     VStack(spacing: 16) {
-                        if todaysEvents.isEmpty {
-                            Text("No events on this day.")
+                        if upcomingEvents.isEmpty {
+                            Text("You have no upcoming events.")
                                 .foregroundColor(.gray)
                         } else {
-                            ForEach(todaysEvents.sorted(by: { $0.date < $1.date })) { event in
+                            ForEach(upcomingEvents) { event in
                                 EventCard(event: event, onTap: {})
                             }
                         }
@@ -64,7 +65,7 @@ private let previewEvents: [Event] =  [
         id: 1,
         title: "Therapy Session",
         description: "Weekly check-in with therapist.",
-        date: isoDate("2025-04-18T10:30:00Z"),
+        date: isoDate("2025-04-28T10:30:00Z"),
         location: "Wellness Center",
         userId: 101,
         createdAt: nil,
