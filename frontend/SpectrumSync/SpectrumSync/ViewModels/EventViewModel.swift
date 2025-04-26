@@ -9,7 +9,7 @@ final class EventViewModel: ObservableObject {
     @Published var errorMessage: String?
     
     private let networkService: NetworkService
-    private let eventBaseURL = "https://https://spectrum-sync-backend-g3hnfve7h3fdbuf4.canadacentral-01.azurewebsites.net/api/events"
+    private let eventBaseURL = "https://spectrum-sync-backend-g3hnfve7h3fdbuf4.canadacentral-01.azurewebsites.net/api/events"
     private var token: String?
     
     /// Initializes the EventViewModel with a NetworkService.
@@ -98,7 +98,18 @@ final class EventViewModel: ObservableObject {
             return
         }
         var headers = [String: String]()
-        if let token = token { headers["Authorization"] = "Bearer \(token)" }
+        if let token = token {
+            headers["Authorization"] = "Bearer \(token)"
+            print("Token is set: \(token)")
+        } else {
+            print("Token is nil — no Authorization header added.")
+        }
+        // DEBUG PRINTS
+        print("\n🔵 GET EVENTS REQUEST:")
+        print("URL: \(url.absoluteString)")
+        print("Method: GET")
+        print("Headers: \(headers)")
+        print("Body: (none)\n")
         
         networkService.request(url: url,
                                method: .get,

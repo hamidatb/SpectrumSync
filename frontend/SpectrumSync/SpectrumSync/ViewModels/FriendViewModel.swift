@@ -8,7 +8,7 @@ final class FriendViewModel: ObservableObject {
     @Published var errorMessage: String?
     
     private let networkService: NetworkService
-    private let friendBaseURL = "https:/https://spectrum-sync-backend-g3hnfve7h3fdbuf4.canadacentral-01.azurewebsites.net/api/friends"
+    private let friendBaseURL = "https://spectrum-sync-backend-g3hnfve7h3fdbuf4.canadacentral-01.azurewebsites.net/api/friends"
     private var token: String?
     
     /// Initializes the FriendViewModel with a NetworkService.

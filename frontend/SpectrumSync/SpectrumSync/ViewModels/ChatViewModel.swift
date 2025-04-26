@@ -19,7 +19,7 @@ final class ChatViewModel: ObservableObject {
     @Published var errorMessage: String?
     
     private let networkService: NetworkService
-    private let chatBaseURL = "https://https://spectrum-sync-backend-g3hnfve7h3fdbuf4.canadacentral-01.azurewebsites.net/api/chats"
+    private let chatBaseURL = "https://spectrum-sync-backend-g3hnfve7h3fdbuf4.canadacentral-01.azurewebsites.net/api/chats"
     private var token: String?
     
     /// Initializes the ChatViewModel with a NetworkService.

@@ -112,7 +112,7 @@ exports.login = async (req, res, next) => {
         logger.log(`Searching for user with email: ${email}`);
         const userResult = await pool.request()
             .input('email', sql.NVarChar, email)
-            .query('SELECT userId, username, email, passwordHash FROM Users WHERE email = @email');
+            .query('SELECT userId, username, email, passwordHash, role FROM Users WHERE email = @email');
 
         if (userResult.recordset.length === 0) {
             logger.warn(`Login failed: User not found with email ${email}`);
@@ -149,6 +149,7 @@ exports.login = async (req, res, next) => {
                 userId: user.userId,
                 username: user.username,
                 email: user.email,
+                role: user.role,
             },
         });
         logger.log('Login successful.');
