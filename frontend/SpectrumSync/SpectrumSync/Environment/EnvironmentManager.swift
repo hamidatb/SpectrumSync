@@ -17,5 +17,5 @@ class EnvironmentManager {
     static let shared = EnvironmentManager()
     private init() {}
     
-    var currentEnvironment: AppEnvironment = .development // Change to .production as needed
+    var currentEnvironment: AppEnvironment = .production
 }

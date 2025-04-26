@@ -7,6 +7,6 @@ struct User: Decodable {
     let username: String
     let email: String
     let role: String
-    var token: String  // JWT for authentication throughout the app
+    var token: String?  // JWT for authentication throughout the app
     let linkedChildIds: [Int]? // for parent accounts
 }

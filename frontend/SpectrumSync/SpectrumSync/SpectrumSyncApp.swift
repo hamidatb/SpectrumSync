@@ -18,7 +18,7 @@ struct SpectrumSyncApp: App {
                 
         // Determine environment and inject the appropriate NetworkService
         if EnvironmentManager.shared.currentEnvironment == .development {
-            // Use MockNetworkManager for development
+            // using MockNetworkManager for purely frontend dev management and testing
             _authViewModel = StateObject(wrappedValue: AuthViewModel(networkService: MockNetworkManager.shared))
             _chatViewModel = StateObject(wrappedValue: ChatViewModel(networkService: MockNetworkManager.shared))
             _eventViewModel = StateObject(wrappedValue: EventViewModel(networkService: MockNetworkManager.shared))

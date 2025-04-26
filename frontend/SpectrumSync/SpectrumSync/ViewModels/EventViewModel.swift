@@ -9,7 +9,7 @@ final class EventViewModel: ObservableObject {
     @Published var errorMessage: String?
     
     private let networkService: NetworkService
-    private let eventBaseURL = "https://your-backend-url.com/api/events"
+    private let eventBaseURL = "https://https://spectrum-sync-backend-g3hnfve7h3fdbuf4.canadacentral-01.azurewebsites.net/api/events"
     private var token: String?
     
     /// Initializes the EventViewModel with a NetworkService.

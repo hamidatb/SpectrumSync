@@ -7,43 +7,9 @@
 import SwiftUI
 
 struct AllEventsView: View {
-    // MARK: - Mock Events (Replace with eventVM.events later)
-    private let events: [Event] = [
-        Event(
-            id: 1,
-            title: "Therapy Session",
-            description: "Weekly check-in with therapist.",
-            date: isoDate("2025-04-28T10:30:00Z"),
-            location: "Wellness Center",
-            userId: 101,
-            createdAt: nil,
-            withWho: "Mom"
-        ),
-        Event(
-            id: 2,
-            title: "Art Class",
-            description: nil,
-            date: isoDate("2025-04-18T15:00:00Z"),
-            location: "Room 204",
-            userId: 101,
-            createdAt: nil,
-            withWho: nil
-        ),
-        Event(
-            id: 3,
-            title: "Playdate",
-            description: "Meet with Lily at the park.",
-            date: isoDate("2025-04-11T13:00:00Z"),
-            location: "River Park",
-            userId: 101,
-            createdAt: nil,
-            withWho: "Mom"
-        )
-    ]
+    @EnvironmentObject var eventVM: EventViewModel
 
-    // Replace this when integrating real data:
-    // @EnvironmentObject var eventVM: EventViewModel
-    // private var events: [Event] { eventVM.events }
+    private var events: [Event] { eventVM.events }
 
     @State private var selectedDate = Date()
 
@@ -83,10 +49,13 @@ struct AllEventsView: View {
             .padding(.top)
             .background(Color.paleBlueBg.ignoresSafeArea())
         }
+        .onAppear{
+            eventVM.getEvents()
+        }
     }
 }
 // MARK: - Preview Provider
-/// Provides sample data for SwiftUI previews.
 #Preview {
     AllEventsView()
+        .environmentObject(EventViewModel())
 }
