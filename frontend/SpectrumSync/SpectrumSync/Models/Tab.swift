@@ -64,7 +64,7 @@ private let tabPreviewEvents: [Event] = [
         location: "Wellness Center",
         userId: 101,
         createdAt: nil,
-        withWho: "Mom"
+        withWho: ["Mom"]
     ),
     Event(
         id: 2,
@@ -84,6 +84,6 @@ private let tabPreviewEvents: [Event] = [
         location: "River Park",
         userId: 101,
         createdAt: nil,
-        withWho: "Mom"
+        withWho: ["Mom"]
     )
 ]

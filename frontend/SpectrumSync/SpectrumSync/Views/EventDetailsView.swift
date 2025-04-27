@@ -47,9 +47,10 @@ struct EventDetailsView: View {
                         detailRow(label: "📝 What:", value: event.title)
                         detailRow(label: "📍 Where:", value: event.location)
                         detailRow(label: "🕒 When:", value: event.date.formattedDateWithWeekday())
-
-                        if let with = event.withWho, with.lowercased() != "no_one" {
-                            detailRow(label: "👩‍👦 With:", value: with)
+                        
+                        if let with = event.withWho, with.first != "N/A" {
+                            let withText = with.joined(separator: ", ")
+                            detailRow(label: "👩‍👦 With:", value: withText)
                         }
 
                         if let desc = event.description, !desc.isEmpty {
@@ -178,7 +179,7 @@ struct EventDetailsView: View {
         location: "Health Centre",
         userId: 1,
         createdAt: nil,
-        withWho: "Mom"
+        withWho: ["Mom"]
     ))
     .environmentObject(EventViewModel(networkService: MockNetworkManager.shared))
     .environmentObject(AuthViewModel())

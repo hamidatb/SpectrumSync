@@ -25,12 +25,7 @@ struct EditEventView: View {
         _description = State(initialValue: event.description ?? "")
         _date = State(initialValue: event.date)
         _location = State(initialValue: event.location)
-
-        let people = event.withWho?
-            .split(separator: ",")
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) } ?? []
-
-        _withWhoList = State(initialValue: people)
+        _withWhoList = State(initialValue: event.withWho ?? [])
     }
 
     var body: some View {
@@ -231,7 +226,7 @@ struct EditEventView: View {
         location: "Wellness Center",
         userId: 101,
         createdAt: isoDate("2025-04-01T09:00:00Z"),
-        withWho: "Mom"
+        withWho: ["Mom"]
     )
 
     return EditEventView(event: sampleEvent)

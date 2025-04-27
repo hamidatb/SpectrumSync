@@ -109,10 +109,12 @@ struct EventCard: View {
                         .font(.body)
                         .foregroundColor(.secondary)
                         .italic()
-                    Text(withWho)
-                        .font(.body)
-                        .foregroundColor(.customBlue)
-                        .italic()
+                    ForEach(withWho, id: \.self) { person in
+                        Text(person)
+                            .font(.body)
+                            .foregroundColor(.customBlue)
+                            .italic()
+                    }
                 }
             }
         }
@@ -154,7 +156,7 @@ private let previewEvents: [Event] =  [
         location: "Wellness Center",
         userId: 101,
         createdAt: nil,
-        withWho: "Mom"
+        withWho: ["Mom"]
     ),
     Event(
         id: 2,
@@ -174,6 +176,6 @@ private let previewEvents: [Event] =  [
         location: "River Park",
         userId: 101,
         createdAt: nil,
-        withWho: "Mom"
+        withWho: ["Mom"]
     )
 ]

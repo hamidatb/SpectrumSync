@@ -58,7 +58,7 @@ private let previewEvents: [Event] = [
         location: "Wellness Center",
         userId: 101,
         createdAt: nil,
-        withWho: "Mom"
+        withWho: ["Mom"]
     ),
     Event(
         id: 2,
@@ -78,7 +78,7 @@ private let previewEvents: [Event] = [
         location: "River Park",
         userId: 101,
         createdAt: nil,
-        withWho: "Mom"
+        withWho: ["Mom"]
     )
 ]
 

@@ -87,7 +87,7 @@ final class MockNetworkManager: NetworkService {
                         location: "Mock Location 2",
                         userId: 1,
                         createdAt: isoDate("2025-01-02T11:30:00Z"),
-                        withWho: "Dad"
+                        withWho: ["Dad"]
                     )
                 ]
                 completion(.success(mockEvents as! T))
@@ -104,7 +104,7 @@ final class MockNetworkManager: NetworkService {
                                 location: "Invitation Location 1",
                                 userId: 2,
                                 createdAt: isoDate("2025-01-03T12:45:00Z"),
-                                withWho: "Friend A"
+                                withWho: ["Friend A"]
                             ),
                             Event(
                                 id: 4,
@@ -114,7 +114,7 @@ final class MockNetworkManager: NetworkService {
                                 location: "Invitation Location 2",
                                 userId: 3,
                                 createdAt: isoDate("2025-01-04T14:00:00Z"),
-                                withWho: "Friend B"
+                                withWho: ["Friend B"]
                             )
                 ]
                 completion(.success(mockInvites as! T))

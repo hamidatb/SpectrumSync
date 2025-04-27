@@ -18,7 +18,7 @@ struct HomeView: View {
         location: "Health Centre",
         userId: 1,
         createdAt: isoDate("2025-02-01T10:00:00Z"),
-        withWho: "Mom"
+        withWho: ["Mom"]
     )
 
     var body: some View {
@@ -232,7 +232,7 @@ private let previewEvents: [Event] =  [
         location: "Wellness Center",
         userId: 101,
         createdAt: nil,
-        withWho: "Mom"
+        withWho: ["Mom"]
     ),
     Event(
         id: 2,
@@ -252,6 +252,6 @@ private let previewEvents: [Event] =  [
         location: "River Park",
         userId: 101,
         createdAt: nil,
-        withWho: "Mom"
+        withWho: ["Mom"]
     )
 ]
