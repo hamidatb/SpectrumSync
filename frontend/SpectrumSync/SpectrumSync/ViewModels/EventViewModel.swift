@@ -98,7 +98,7 @@ final class EventViewModel: ObservableObject {
             return
         }
         var headers = [String: String]()
-        if let token = token {
+        if let token = SessionManager.shared.token {
             headers["Authorization"] = "Bearer \(token)"
             print("Token is set: \(token)")
         } else {
@@ -119,8 +119,15 @@ final class EventViewModel: ObservableObject {
                 switch result {
                 case .success(let events):
                     self.events = events
+                    print("Events fetched successfully:")
+                    // TODO - remove this: Just for debugging connectivity
+                    for event in events {
+                        print("Event ID: \(event.id), Title: \(event.title), Date: \(event.date)")
+                    }
                 case .failure(let error):
                     self.errorMessage = error.localizedDescription
+                    print("Failed to fetch events: \(error.localizedDescription)")
+
                 }
             }
         }

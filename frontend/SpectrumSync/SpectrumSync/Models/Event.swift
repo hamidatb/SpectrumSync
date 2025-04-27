@@ -10,7 +10,7 @@ struct Event: Codable, Identifiable, Hashable {
     let location: String
     let userId: Int
     let createdAt: Date?
-    let withWho: String?
+    let withWho: [String]?
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -20,6 +20,6 @@ struct Event: Codable, Identifiable, Hashable {
         case location
         case userId = "userId"
         case createdAt = "created_at"
-        case withWho = "no_one"
+        case withWho
     }
 }

@@ -11,7 +11,7 @@ const logger = require('../utils/logger');
  * (POST) Create a new event
  */
 exports.createEvent = async (req, res, next) => {
-    const { title, description, date, location } = req.body;
+    const { title, description, date, location, withWho } = req.body;
     const userId = req.user.userId;
 
     logger.log(`Received request to create a new event: { title: ${title}, description: ${description}, date: ${date}, location: ${location} }`);
@@ -28,9 +28,10 @@ exports.createEvent = async (req, res, next) => {
             .input('date', sql.DateTime, date)
             .input('location', sql.NVarChar, location)
             .input('userId', sql.Int, userId)
+            .input('withWho', sql.NVarChar, withWho)
             .query(`
-                INSERT INTO Events (title, description, date, location, userId) 
-                VALUES (@title, @description, @date, @location, @userId);
+                INSERT INTO Events (title, description, date, location, userId, withWho) 
+                VALUES (@title, @description, @date, @location, @userId, @withWho);
         
                 SELECT * FROM Events WHERE eventId = SCOPE_IDENTITY();
             `);

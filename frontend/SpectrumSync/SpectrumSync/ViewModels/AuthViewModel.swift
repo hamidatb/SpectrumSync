@@ -131,6 +131,9 @@ final class AuthViewModel: ObservableObject {
                     self.isAuthenticated = true
                     print("LoggedInUser: \(loggedInUser), token: \(String(describing: loggedInUser.token)), isAuthenticated = \(self.isAuthenticated)")
                     print("Login successful! Navigating to HomeView.")
+                    
+                    // save info globally in session manager
+                    SessionManager.shared.login(user: loggedInUser, token: authResponse.token)
                 }
                 
             case .failure(let error):
