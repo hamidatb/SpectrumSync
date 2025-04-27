@@ -76,6 +76,18 @@ exports.getEvents = async (req, res, next) => {
             .input('userId', sql.Int, userId)
             .query('SELECT * FROM Events WHERE userId = @userId ORDER BY date ASC');
         
+
+        // Make sure the withWho param is sent over as a LIST
+        const events = rawEvents.map(event => {
+            let withWhoArray = null;
+            if (event.withWho && event.withWho !== 'N/A') {
+                withWhoArray = event.withWho.split(',').map(person => person.trim());
+            }
+            return {
+                ...event,
+                withWho: withWhoArray
+            };
+        });
         logger.log(`Events fetched successfully: ${JSON.stringify(result.recordset)}`);
         res.status(200).json(result.recordset);
     } catch (error) {

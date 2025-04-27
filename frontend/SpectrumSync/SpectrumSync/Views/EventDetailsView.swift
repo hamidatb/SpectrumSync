@@ -48,7 +48,7 @@ struct EventDetailsView: View {
                         detailRow(label: "📍 Where:", value: event.location)
                         detailRow(label: "🕒 When:", value: event.date.formattedDateWithWeekday())
                         
-                        if let with = event.withWho, with.first != "N/A" {
+                        if let with = event.withWho, !with.isEmpty {
                             let withText = with.joined(separator: ", ")
                             detailRow(label: "👩‍👦 With:", value: withText)
                         }
