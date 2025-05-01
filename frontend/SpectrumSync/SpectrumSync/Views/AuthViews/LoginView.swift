@@ -64,6 +64,23 @@ struct LoginView: View {
                     .cornerRadius(10)
                     .padding(.horizontal, 30)
             }
+            
+            // MARK: - Login As Demo User Button
+            // THIS WILL BE REMOVED BEFORE EVER GOING INTO PROD
+            Button(action: {
+                print("Attempting login as Demo User (John@example.com)")
+                authViewModel.login(email: "john@example.com", password: "Password123!")
+            }) {
+                Text("Preview Only - Login As Demo User")
+                    .font(.custom("Montserrat-SemiBold", size: 20))
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.customBlue)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+                    .padding(.horizontal, 30)
+            }
+
 
             // MARK: - Error Message
             if let error = authViewModel.errorMessage, showError {
