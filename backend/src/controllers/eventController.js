@@ -78,18 +78,22 @@ exports.getEvents = async (req, res, next) => {
         
 
         // Make sure the withWho param is sent over as a LIST
-        const events = rawEvents.map(event => {
-            let withWhoArray = null;
+        const events = result.recordset.map(event => {
+            let withWhoArray = [];
+
             if (event.withWho && event.withWho !== 'N/A') {
-                withWhoArray = event.withWho.split(',').map(person => person.trim());
+                withWhoArray = event.withWho
+                .split(',')
+                .map(person => person.trim())
+                .filter(person => person.length > 0);
             }
             return {
                 ...event,
                 withWho: withWhoArray
             };
         });
-        logger.log(`Events fetched successfully: ${JSON.stringify(result.recordset)}`);
-        res.status(200).json(result.recordset);
+        logger.log(`Events fetched successfully: ${JSON.stringify(events)}`);
+        res.status(200).json(events);
     } catch (error) {
         handleError(error, res, 'Error fetching events');
     }

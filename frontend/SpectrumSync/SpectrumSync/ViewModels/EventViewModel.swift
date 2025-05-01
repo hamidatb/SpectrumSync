@@ -5,7 +5,8 @@ import Combine
 /// ViewModel for handling event-related actions.
 final class EventViewModel: ObservableObject {
     @Published var events: [Event] = []
-    @Published var invites: [Event] = []  // Assuming event invitations are returned as events.
+    @Published var nextEvent: Event?
+    @Published var invites: [Event] = []
     @Published var errorMessage: String?
     
     private let networkService: NetworkService
@@ -126,7 +127,43 @@ final class EventViewModel: ObservableObject {
                     }
                 case .failure(let error):
                     self.errorMessage = error.localizedDescription
-                    print("Failed to fetch events: \(error.localizedDescription)")
+                    print("Failed to fetch events: \(error)")
+
+                }
+            }
+        }
+    }
+    
+    /// Gets the next upcoming event for the User
+    func getNextEvent() {
+        guard let url = URL(string: "\(eventBaseURL)" + "/upcomingEvent") else {
+            DispatchQueue.main.async {
+                self.errorMessage = "Invalid URL."
+            }
+            return
+        }
+        var headers = [String: String]()
+        if let token = SessionManager.shared.token {
+            headers["Authorization"] = "Bearer \(token)"
+            print("Token is set: \(token)")
+        } else {
+            print("Token is nil — no Authorization header added.")
+        }
+        // DEBUG PRINTS
+        print("\nGet Next Event Request:")
+        print("URL: \(url.absoluteString)")
+        
+        networkService.request(url: url,
+                               method: .get,
+                               headers: headers,
+                               body: nil) { (result: Result<Event, APIError>) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let nextEvent):
+                    self.nextEvent = nextEvent
+                    print("Next Event fetched successfully:")
+                case .failure(let error):
+                    print("Failed to fetch the next event: \(error)")
 
                 }
             }
