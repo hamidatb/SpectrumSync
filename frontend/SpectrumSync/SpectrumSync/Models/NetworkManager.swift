@@ -98,7 +98,10 @@ final class NetworkManager: NetworkService {
 
             // Decode the JSON data.
             do {
-                let decodedObject = try JSONDecoder().decode(T.self, from: data)
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .iso8601
+                let decodedObject = try decoder.decode(T.self, from: data)
+                
                 DispatchQueue.main.async {
                     completion(.success(decodedObject))
                 }

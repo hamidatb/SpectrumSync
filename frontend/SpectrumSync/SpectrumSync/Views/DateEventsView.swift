@@ -1,11 +1,10 @@
 import SwiftUI
 
 struct DateEventsView: View {
+    @EnvironmentObject var eventVM: EventViewModel
+
     let date: Date
-
-    // MARK: - Mock Events (Replace with ViewModel later)
-    let events: [Event] = previewEvents
-
+    
     @State private var selectedEvent: Event?
 
     var body: some View {
@@ -16,7 +15,9 @@ struct DateEventsView: View {
                     .padding()
 
                 ScrollView {
-                    let dayEvents = events.filter {
+                    // Get the events for the current day
+                    // Note -> This works bc allEventsView already called eventVM.getEvents()
+                    let dayEvents = eventVM.events.filter {
                         Calendar.current.isDate($0.date, inSameDayAs: date)
                     }
 

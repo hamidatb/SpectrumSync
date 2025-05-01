@@ -120,7 +120,6 @@ final class EventViewModel: ObservableObject {
         } else {
             print("Token is nil — no Authorization header added.")
         }
-        
         // DEBUG PRINTS
         print("\n🔵 GET EVENTS REQUEST:")
         print("URL: \(url.absoluteString)")

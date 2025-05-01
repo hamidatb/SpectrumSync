@@ -13,13 +13,13 @@ struct Event: Codable, Identifiable, Hashable {
     let withWho: [String]?
 
     enum CodingKeys: String, CodingKey {
-        case id
+        case id = "eventId"
         case title
         case description
         case date
         case location
         case userId = "userId"
-        case createdAt = "created_at"
+        case createdAt
         case withWho
     }
 }
