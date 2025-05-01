@@ -12,6 +12,7 @@ struct AllEventsView: View {
     private var events: [Event] { eventVM.events }
 
     @State private var selectedDate = Date()
+    @State private var selectedEvent: Event?
 
     var body: some View {
         NavigationStack {
@@ -38,7 +39,9 @@ struct AllEventsView: View {
                                 .foregroundColor(.gray)
                         } else {
                             ForEach(upcomingEvents) { event in
-                                EventCard(event: event, onTap: {})
+                                EventCard(event: event) {
+                                    selectedEvent = event // open the event on tap
+                                }
                             }
                         }
                     }
@@ -48,6 +51,9 @@ struct AllEventsView: View {
             }
             .padding(.top)
             .background(Color.paleBlueBg.ignoresSafeArea())
+            .navigationDestination(item: $selectedEvent) { event in
+               EventDetailsView(event: event) // go to the detail view if an event was selected
+           }
         }
     }
 }
