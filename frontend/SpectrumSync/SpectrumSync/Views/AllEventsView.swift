@@ -26,7 +26,7 @@ struct AllEventsView: View {
 
                 // Events from today and beyond
                 let upcomingEvents = events
-                    //.filter { $0.date >= Calendar.current.startOfDay(for: Date()) }
+                    .filter { $0.date >= Calendar.current.startOfDay(for: Date()) }
                     .sorted(by: { $0.date < $1.date })
                 Text("Upcoming Events")
                     .fontWeight(.regular)
@@ -48,9 +48,6 @@ struct AllEventsView: View {
             }
             .padding(.top)
             .background(Color.paleBlueBg.ignoresSafeArea())
-        }
-        .onAppear{
-            eventVM.getEvents()
         }
     }
 }

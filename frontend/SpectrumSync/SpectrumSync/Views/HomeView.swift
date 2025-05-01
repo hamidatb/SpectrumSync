@@ -187,6 +187,9 @@ struct HomeView: View {
             }
         }
         .frame(height: 700)
+        .onAppear{
+            eventVM.getEvents()
+        }
     }
 }
 
