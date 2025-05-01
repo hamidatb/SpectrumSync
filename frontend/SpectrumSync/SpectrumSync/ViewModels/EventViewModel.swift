@@ -91,13 +91,28 @@ final class EventViewModel: ObservableObject {
     }
     
     /// Retrieves all events for the authenticated user.
-    func getEvents() {
-        guard let url = URL(string: "\(eventBaseURL)") else {
-            DispatchQueue.main.async {
-                self.errorMessage = "Invalid URL."
+    func getEvents(date: Date? = nil) {
+        
+        var components = URLComponents(string: eventBaseURL)
+        
+        if let date = date {
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy-MM-dd"
+                let dateString = formatter.string(from: date)
+                
+                components?.queryItems = [
+                    URLQueryItem(name: "date", value: dateString)
+                ]
             }
-            return
-        }
+        
+        guard let url = components?.url else {
+                DispatchQueue.main.async {
+                    self.errorMessage = "Invalid URL."
+                }
+                return
+            }
+        
+        
         var headers = [String: String]()
         if let token = SessionManager.shared.token {
             headers["Authorization"] = "Bearer \(token)"
@@ -105,6 +120,7 @@ final class EventViewModel: ObservableObject {
         } else {
             print("Token is nil — no Authorization header added.")
         }
+        
         // DEBUG PRINTS
         print("\n🔵 GET EVENTS REQUEST:")
         print("URL: \(url.absoluteString)")
