@@ -1,36 +1,19 @@
 import SwiftUI
 
 struct CalendarView: View {
-    // MARK: - State
+    @EnvironmentObject var eventVM: EventViewModel
+
+    private var events: [Event] { eventVM.events }
+
     @State private var selectedDate: Date = Date()
     @State private var currentMonthOffset = 0
     @State private var navigateToDateEvents = false
     @State private var tappedDate: Date?
 
-    // MARK: - Mock Events (Replace this with @EnvironmentObject later)
-    private let mockEventDates: Set<Date> = [
-        // April Events
-            isoDate("2025-04-10T14:00:00Z"), // Doctor's Appointment
-            isoDate("2025-04-18T09:30:00Z"), // Art Class
-            isoDate("2025-04-21T16:45:00Z"), // Playdate at Park
-
-            // January Events
-            isoDate("2025-01-10T11:00:00Z"), // Therapy Session
-
-            // February Events
-            isoDate("2025-02-10T13:15:00Z")  // Parent-Teacher Meeting
-    ]
-
-    // MARK: - Real Data (uncomment this when ready)
-    // @EnvironmentObject var eventVM: EventViewModel
-    // private var normalizedEventDates: Set<Date> {
-    //     Set(eventVM.events.map { Calendar.current.startOfDay(for: $0.date) })
-    // }
-
     private var calendar: Calendar { Calendar.current }
 
     private var normalizedEventDates: Set<Date> {
-        Set(mockEventDates.map { calendar.startOfDay(for: $0) })
+        Set(eventVM.events.map { calendar.startOfDay(for: $0.date) })
     }
 
     private func days(for offset: Int) -> [Date] {
@@ -102,11 +85,7 @@ struct CalendarView: View {
                                 Circle()
                                     .fill(calendar.isDate(date, inSameDayAs: selectedDate) ? Color.customBlue : Color.clear)
                             )
-                        let hasEvent = mockEventDates.contains {
-                            calendar.isDate($0, inSameDayAs: date)
-                        }
-
-
+                        let hasEvent = normalizedEventDates.contains(calendar.startOfDay(for: date))
                         
                         // Blue dot if event exists
                         Circle()
