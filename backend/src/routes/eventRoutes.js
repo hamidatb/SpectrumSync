@@ -110,6 +110,27 @@ router.get('/:id', (req, res, next) => {
     eventController.getEventById(req, res, next);
 });
 
+// ROUTE: Get an event by the date of the event 
+/**
+ * @route   GET /api/events/:date
+ * @desc    Get event details by the date
+ * @access  Private
+ * 
+ * Example Request:
+ * GET /api/events/2025-04-01
+ * 
+ * Headers:
+ * {
+ *   "Authorization": "Bearer <your_token>"
+ * }
+ * 
+ * No request body required.
+ */
+router.get('/:id', (req, res, next) => {
+    logger.log(`GET /api/events/${req.params.date} - Fetching event details`);
+    eventController.getEventsByDate(req, res, next);
+});
+
 // ROUTE: Update an event by ID
 /**
  * @route   PUT /api/events/:id

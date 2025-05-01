@@ -137,7 +137,7 @@ exports.getEventById = async (req, res, next) => {
 /**
  * (GET) Get the events of a specific day
  */
-exports.getEventsByDay = async (req, res, next) => {    
+exports.getEventsByDate = async (req, res, next) => {    
     if (!validateUserId(req, res)) return;
 
     const userId = req.user.userId;
