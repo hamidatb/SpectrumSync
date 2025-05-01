@@ -70,7 +70,6 @@ exports.getEvents = async (req, res, next) => {
     try {
         const pool = await connectToDatabase();
 
-        // Retrieve events using parameterized query
         logger.log('Fetching events from the database...');
         const result = await pool.request()
             .input('userId', sql.Int, userId)
@@ -134,6 +133,49 @@ exports.getEventById = async (req, res, next) => {
         handleError(error, res, 'Error retrieving event details');
     }
 };
+
+/**
+ * (GET) Get the events of a specific day
+ */
+exports.getEventsByDay = async (req, res, next) => {    
+    if (!validateUserId(req, res)) return;
+
+    const userId = req.user.userId;
+    const date = req.params.date; // I have to send ?date=2025-05-01
+
+    logger.log(`Received request to fetch events on ${date} for userId: ${userId}`);
+
+    try {
+        const pool = await connectToDatabase();
+
+        logger.log('Fetching events from the database...');
+        const result = await pool.request()
+            .input('userId', sql.Int, userId)
+            // Note: The way I'm casting date here does mean I can't do indexing on this after 
+            .query("SELECT * FROM Events WHERE userId = @userId AND CAST(date AS DATE) = @date ORDER BY date ASC;");
+        
+
+        const events = result.recordset.map(event => {
+            let withWhoArray = [];
+
+            if (event.withWho && event.withWho !== 'N/A') {
+                withWhoArray = event.withWho
+                .split(',')
+                .map(person => person.trim())
+                .filter(person => person.length > 0);
+            }
+            return {
+                ...event,
+                withWho: withWhoArray
+            };
+        });
+        logger.log(`Events fetched successfully: ${JSON.stringify(events)}`);
+        res.status(200).json(events);
+    } catch (error) {
+        handleError(error, res, 'Error fetching events');
+    }
+};
+
 
 /**
  * (PUT) Edit an event by ID
