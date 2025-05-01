@@ -67,6 +67,7 @@ struct LoginView: View {
             
             // MARK: - Login As Demo User Button
             // THIS WILL BE REMOVED BEFORE EVER GOING INTO PROD
+            // Also will add API Rate limiting eventually
             Button(action: {
                 print("Attempting login as Demo User (John@example.com)")
                 authViewModel.login(email: "john@example.com", password: "Password123!")
