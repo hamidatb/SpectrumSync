@@ -99,9 +99,13 @@ final class NetworkManager: NetworkService {
             // Decode the JSON data.
             do {
                 let decoder = JSONDecoder()
-                decoder.dateDecodingStrategy = .iso8601
-                let decodedObject = try decoder.decode(T.self, from: data)
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+                formatter.locale = Locale(identifier: "en_US_POSIX")
+                formatter.timeZone = TimeZone(secondsFromGMT: 0)
+                decoder.dateDecodingStrategy = .formatted(formatter)
                 
+                let decodedObject = try decoder.decode(T.self, from: data)
                 DispatchQueue.main.async {
                     completion(.success(decodedObject))
                 }
