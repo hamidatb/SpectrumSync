@@ -8,18 +8,16 @@ struct HomeView: View {
     @State private var showEventDetails = false
     @State private var showTodayEvents = false
     @State private var showChat = false
+    private var events: [Event] { eventVM.events }
     
-    // Dummy event data
-    let nextEvent = Event(
-        id: 1,
-        title: "Go to Doctors",
-        description: "Annual check-up with pediatrician",
-        date: Calendar.current.date(from: DateComponents(year: 2025, month: 2, day: 2, hour: 9, minute: 0)) ?? Date(),
-        location: "Health Centre",
-        userId: 1,
-        createdAt: isoDate("2025-02-01T10:00:00Z"),
-        withWho: ["Mom"]
-    )
+    // have to use a computed property since it relies on the eventVM environment object here - and computed properties recompute when the env object recomputes
+    var nextEvent: Event? {
+        events
+            .filter { $0.date >= Calendar.current.startOfDay(for: Date()) }
+            .sorted(by: { $0.date < $1.date })
+            .first
+    }
+
 
     var body: some View {
         NavigationStack {
@@ -122,37 +120,45 @@ struct HomeView: View {
                         .background(Color.customLightBlue)
                         .cornerRadius(16)
                         
-                        NavigationLink(destination: EventDetailsView(event: nextEvent)) {
+                        if let next = nextEvent {
+                                NavigationLink(destination: EventDetailsView(event: next)) {
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .fill(Color.customBlue2)
+                                        .frame(width: 160, height: 170)
+                                        .overlay(
+                                            VStack(spacing: 6) {
+                                                Image(systemName: "person.fill")
+                                                    .font(.system(size: 30))
+                                                    .foregroundColor(.black)
+                                                Text(next.title)
+                                                    .font(.title3)
+                                                    .multilineTextAlignment(.center)
+                                                    .fontWeight(.regular)
+                                                Text(formattedEventDate(event: next))
+                                                    .font(.system(size: 12, weight: .regular))
+                                            }
+                                            .padding()
+                                        )
+                                }
+                                .buttonStyle(.plain)
+                        } else {
                             RoundedRectangle(cornerRadius: 16)
-                                .fill(Color.customBlue2)
+                                .fill(Color.gray.opacity(0.2))
                                 .frame(width: 160, height: 170)
                                 .overlay(
-                                    VStack(spacing: 6) {
-                                        Image(systemName: "person.fill")
+                                    VStack(spacing: 8) {
+                                        Image(systemName: "calendar.badge.exclamationmark")
                                             .font(.system(size: 30))
-                                            .foregroundColor(.black)
-                                        Text(nextEvent.title)
-                                            .font(.title3)
+                                            .foregroundColor(.gray)
+                                        Text("No upcoming events")
+                                            .font(.subheadline)
                                             .multilineTextAlignment(.center)
-                                            .fontWeight(.regular)
-                                        Text(formattedEventDate(event: nextEvent))
-                                            .font(.system(size: 12, weight: .regular))
-                                        
-                                        if let with = nextEvent.withWho {
-                                            Text("with \(with)")
-                                                .font(.caption)
-                                                .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
-                                                .padding(6)
-                                                .padding(.horizontal, 10)
-                                                .background(Color.customBlue3.opacity(0.6))
-                                                .cornerRadius(12)
-                                                .foregroundColor(.white)
-                                        }
+                                            .foregroundColor(.gray)
                                     }
                                         .padding()
                                 )
                         }
-                        .buttonStyle(.plain)
+    
                     }
                     // end of "Your next event card"
                     
