@@ -8,14 +8,13 @@
 
 **Spectrum Sync** is a mobile app designed to support individuals on the autism spectrum by streamlining communication and organization for families and caregivers. Stay connected, manage schedules, and enhance collaboration effortlessly. 💙
 
+#### April 2025 Demo
+https://github.com/user-attachments/assets/8ffbabd3-42fa-4daf-9a05-9dd72ddad97c
+
 ---
 
 ## Features 🚀
 
-### Welcome to Spectrum Sync 🎉
-
-
-- **Connect** 🤝: Stay in touch with the entire family effortlessly.
 - **Update** 🔄: Share updates and stay informed with schedule adjustments.
 - **Manage** 📅: Organize routines and tasks with an easy-to-use interface.
 ---
