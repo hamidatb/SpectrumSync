@@ -159,14 +159,14 @@ struct AddEventView: View {
             title: title,
             description: description,
             date: isoDate,
-            location: location
-            // withWho: withWho
+            location: location,
+            withWho: withWhoList
         )
 
         withAnimation {
             showConfirmation = true
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
             dismiss()
         }
     }

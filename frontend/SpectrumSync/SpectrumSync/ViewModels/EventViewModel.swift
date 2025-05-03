@@ -52,7 +52,7 @@ final class EventViewModel: ObservableObject {
     }
     
     /// Creates a new event.
-    func createEvent(title: String, description: String?, date: String, location: String) {
+    func createEvent(title: String, description: String?, date: String, location: String, withWho: [String]?) {
         guard let url = URL(string: "\(eventBaseURL)") else {
             DispatchQueue.main.async {
                 self.errorMessage = "Invalid URL."
@@ -63,7 +63,8 @@ final class EventViewModel: ObservableObject {
             "title": title,
             "description": description ?? "",
             "date": date,
-            "location": location
+            "location": location,
+            "withWho": withWho ?? []
         ]
         guard let jsonData = try? JSONSerialization.data(withJSONObject: parameters) else {
             DispatchQueue.main.async {
@@ -225,7 +226,7 @@ final class EventViewModel: ObservableObject {
     }
     
     /// Updates an event by its ID.
-    func updateEvent(eventId: Int, title: String, description: String?, date: String, location: String) {
+    func updateEvent(eventId: Int, title: String, description: String?, date: String, location: String, withWho: [String]?) {
         guard let url = URL(string: "\(eventBaseURL)/\(eventId)") else {
             DispatchQueue.main.async {
                 self.errorMessage = "Invalid URL."
@@ -236,7 +237,8 @@ final class EventViewModel: ObservableObject {
             "title": title,
             "description": description ?? "",
             "date": date,
-            "location": location
+            "location": location,
+            "withWho": withWho ?? []
         ]
         guard let jsonData = try? JSONSerialization.data(withJSONObject: parameters) else {
             DispatchQueue.main.async {

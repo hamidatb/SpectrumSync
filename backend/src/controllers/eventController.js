@@ -28,7 +28,7 @@ exports.createEvent = async (req, res, next) => {
             .input('date', sql.DateTime, date)
             .input('location', sql.NVarChar, location)
             .input('userId', sql.Int, userId)
-            .input('withWho', sql.NVarChar, withWho)
+            .input('withWho', sql.NVarChar, Array.isArray(withWho) ? withWho.join(',') : withWho || null)
             .query(`
                 INSERT INTO Events (title, description, date, location, userId, withWho) 
                 VALUES (@title, @description, @date, @location, @userId, @withWho);
@@ -181,7 +181,7 @@ exports.getEventsByDate = async (req, res, next) => {
  * (PUT) Edit an event by ID
  */
 exports.updateEvent = async (req, res, next) => {
-    const { title, description, date, location } = req.body;
+    const { title, description, date, location, withWho } = req.body;
     const userId = req.user.userId;
     const eventId = req.params.id;
 
@@ -213,9 +213,10 @@ exports.updateEvent = async (req, res, next) => {
             .input('date', sql.DateTime, date)
             .input('location', sql.NVarChar, location)
             .input('eventId', sql.Int, eventId)
+            .input('withWho', sql.NVarChar, Array.isArray(withWho) ? withWho.join(',') : withWho || null)
             .query(`
                 UPDATE Events
-                SET title = @title, description = @description, date = @date, location = @location
+                SET title = @title, description = @description, date = @date, location = @location, withWho = @withWho
                 WHERE eventId = @eventId;
         
                 SELECT * FROM Events WHERE eventId = @eventId;

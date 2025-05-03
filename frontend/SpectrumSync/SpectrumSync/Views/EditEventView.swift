@@ -164,18 +164,16 @@ struct EditEventView: View {
             return
         }
 
-        _ = ISO8601DateFormatter().string(from: date)
-        let withWhoString = withWhoList.joined(separator: ", ")
+        let isoEventDate = ISO8601DateFormatter().string(from: date)
 
-        // TODO: Un-comment when API logic is available
-        // eventVM.updateEvent(
-        //     id: event.id,
-        //     title: title,
-        //     description: description,
-        //     date: isoDate,
-        //     location: location,
-        //     withWho: withWhoString
-        // )
+        eventVM.updateEvent(
+             eventId: event.id,
+             title: title,
+             description: description,
+             date: isoEventDate,
+             location: location,
+             withWho: withWhoList
+         )
 
         withAnimation {
             showConfirmation = true
