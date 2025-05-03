@@ -11,10 +11,9 @@ struct MainView: View {
 
     // Track the selected tab
     @State private var selectedTab: Tab = .homeTab
-    var shouldShowTabBar: Bool {
-        !(selectedTab == .chatTab && keyboardObserver.isKeyboardVisible)
-    }
-
+    
+    // neeed to refactor to remove this variable
+    var shouldShowTabBar: Bool = true
     
     var body: some View {
             NavigationStack {

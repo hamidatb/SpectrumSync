@@ -14,7 +14,6 @@ import SwiftUI // need this for views
 // Using the CaseIterable so I can dynamically iterate over all the tabs
 enum Tab: CaseIterable {
     case homeTab
-    case chatTab
     case calendarTab
     case eventTab
     case settingsTab
@@ -24,7 +23,6 @@ enum Tab: CaseIterable {
     var title: String {
         switch self {
         case .homeTab: return "Home"
-        case .chatTab: return "Chat"
         case .calendarTab: return "Calendar"
         case .eventTab: return "Event"
         case .settingsTab: return "Settings"
@@ -35,7 +33,6 @@ enum Tab: CaseIterable {
     var iconName: String {
         switch self {
         case .homeTab: return "house.fill"
-        case .chatTab: return "message.fill"
         case .calendarTab: return "calendar"
         case .eventTab: return "clock.fill"
         case .settingsTab: return "gearshape.fill"
@@ -47,7 +44,6 @@ enum Tab: CaseIterable {
     func getView() -> AnyView {
         switch self {
         case .homeTab: return AnyView(HomeView())
-        case .chatTab: return AnyView(ChatView())
         case .calendarTab: return AnyView(AllEventsView())
         case .eventTab: return AnyView(AddEventView())
         case .settingsTab: return AnyView(SettingsView())
