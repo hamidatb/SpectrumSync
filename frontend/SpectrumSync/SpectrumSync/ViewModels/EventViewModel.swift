@@ -201,7 +201,12 @@ final class EventViewModel: ObservableObject {
             return
         }
         var headers = [String: String]()
-        if let token = token { headers["Authorization"] = "Bearer \(token)" }
+        if let token = SessionManager.shared.token {
+            headers["Authorization"] = "Bearer \(token)"
+            print("Token is set: \(token)")
+        } else {
+            print("Token is nil — no Authorization header added.")
+        }
         
         networkService.request(url: url,
                                method: .get,
@@ -267,7 +272,12 @@ final class EventViewModel: ObservableObject {
             return
         }
         var headers = [String: String]()
-        if let token = token { headers["Authorization"] = "Bearer \(token)" }
+        if let token = SessionManager.shared.token {
+            headers["Authorization"] = "Bearer \(token)"
+            print("Token is set: \(token)")
+        } else {
+            print("Token is nil — no Authorization header added.")
+        }
         
         networkService.request(url: url,
                                method: .delete,

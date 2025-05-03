@@ -98,8 +98,7 @@ struct EventDetailsView: View {
                     Button("Delete", role: .destructive) {
                         isDeleting = true
                         Task {
-                            // Replace with real API call
-                            // await eventVM.delete(event)
+                            eventVM.deleteEvent(eventId: event.id)
                             isDeleting = false
                             showDeletedMessage = true
 
