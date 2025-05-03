@@ -72,7 +72,13 @@ final class EventViewModel: ObservableObject {
             return
         }
         var headers = ["Content-Type": "application/json"]
-        if let token = token { headers["Authorization"] = "Bearer \(token)" }
+        
+        if let token = SessionManager.shared.token {
+            headers["Authorization"] = "Bearer \(token)"
+            print("Token is set: \(token)")
+        } else {
+            print("Token is nil — no Authorization header added.")
+        }
         
         networkService.request(url: url,
                                method: .post,

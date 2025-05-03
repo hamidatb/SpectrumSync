@@ -19,8 +19,6 @@ struct AddEventView: View {
     @State private var withWhoList: [String] = []
     @State private var currentWithWho = ""
 
-
-
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
