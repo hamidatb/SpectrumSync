@@ -30,7 +30,7 @@ extension String {
 // MARK: - Main Event Card Scroll View
 /// Displays a vertically scrolling list of event cards.
 /// Each card is sorted by date and tapping a card opens the full event view.
-struct EventCardScrollView: View {
+struct TodaysEventCardScrollView: View {
     let events: [Event]
     
     // State to track the currently selected event for detail view presentation.
@@ -143,7 +143,7 @@ struct EventCard: View {
 // MARK: - Preview Provider
 /// Provides sample data for SwiftUI previews.
 #Preview {
-    EventCardScrollView(events: previewEvents)
+    TodaysEventCardScrollView(events: previewEvents)
 }
 
 // Sample events for previewing the UI in Xcode.

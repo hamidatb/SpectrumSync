@@ -51,16 +51,16 @@ struct HomeView: View {
                     .overlay(
                         HStack {
                             VStack(alignment: .leading, spacing: 4) {
-                                Text("Ask About\nYour Events")
+                                Text("Todays Events")
                                     .font(.title2)
                                     .fontWeight(.regular)
                                     .multilineTextAlignment(.leading)
                                     .lineLimit(2)
                                     .foregroundColor(Color.customDarkBlue)
                                 
-                                NavigationLink(destination: ChatView()) {
+                                NavigationLink(destination: TodaysEventCardScrollView(events: eventVM.events)) {
                                     HStack {
-                                        Text("Chat")
+                                        Text("See Your Plan")
                                             .font(.subheadline)
                                             .foregroundColor(.white)
                                         Spacer()
@@ -162,11 +162,11 @@ struct HomeView: View {
                     }
                     // end of "Your next event card"
                     
-                    // Today's Events
+                    // Add an event
                     VStack(alignment: .center, spacing: 8) {
-                        NavigationLink(destination: EventCardScrollView(events: previewEvents)) {
+                        NavigationLink(destination: AddEventView()) {
                             VStack(spacing: 12) {
-                                Text("Today’s Events")
+                                Text("Add An Event")
                                     .font(.title2)
                                     .foregroundColor(.customDarkBlue)
                                     .multilineTextAlignment(.center)
