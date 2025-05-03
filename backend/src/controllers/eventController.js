@@ -26,7 +26,7 @@ exports.createEvent = async (req, res, next) => {
             .input('title', sql.NVarChar, title)
             .input('description', sql.NVarChar, description || null)
             .input('date', sql.DateTime, date)
-            .input('location', sql.NVarChar, location)
+            .input('location', sql.NVarChar, location && location.trim() !== '' ? location.trim() : null)
             .input('userId', sql.Int, userId)
             .input('withWho', sql.NVarChar, Array.isArray(withWho) ? withWho.join(',') : withWho || null)
             .query(`
@@ -38,15 +38,6 @@ exports.createEvent = async (req, res, next) => {
 
         const newEvent = insertResult.recordset[0];
         logger.log(`Event inserted successfully: ${JSON.stringify(newEvent)}`);
-
-        // Add the creator as an attendee with status 'Attending'
-        await pool.request()
-            .input('eventId', sql.Int, newEvent.eventId)
-            .input('userId', sql.Int, userId)
-            .input('status', sql.NVarChar, ATTENDEE_STATUS.ATTENDING)
-            .query('INSERT INTO EventAttendees (eventId, userId, status) VALUES (@eventId, @userId, @status)');
-
-        logger.log(`Added creator as attendee with status 'Attending' for eventId: ${newEvent.eventId}`);
 
         // Return the inserted event details
         res.status(201).json({
@@ -211,7 +202,7 @@ exports.updateEvent = async (req, res, next) => {
             .input('title', sql.NVarChar, title)
             .input('description', sql.NVarChar, description || null)
             .input('date', sql.DateTime, date)
-            .input('location', sql.NVarChar, location)
+            .input('location', sql.NVarChar, location && location.trim() !== '' ? location.trim() : null)
             .input('eventId', sql.Int, eventId)
             .input('withWho', sql.NVarChar, Array.isArray(withWho) ? withWho.join(',') : withWho || null)
             .query(`

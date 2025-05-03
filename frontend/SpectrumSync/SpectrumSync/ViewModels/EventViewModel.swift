@@ -25,6 +25,18 @@ final class EventViewModel: ObservableObject {
         self.token = token
     }
     
+    // function to add the token to headers so I don't keep repeating myself
+    func createEventRequestHeader() -> [String: String]{
+        var headers = ["Content-Type": "application/json"]
+        if let token = SessionManager.shared.token {
+            headers["Authorization"] = "Bearer \(token)"
+            print("Token is set: \(token)")
+        } else {
+            print("Token is nil — no Authorization header added.")
+        }
+        return headers
+    }
+    
     /// Fetches event invitations for the authenticated user.
     func getInvites() {
         guard let url = URL(string: "\(eventBaseURL)/invites") else {
@@ -33,8 +45,7 @@ final class EventViewModel: ObservableObject {
             }
             return
         }
-        var headers = [String: String]()
-        if let token = token { headers["Authorization"] = "Bearer \(token)" }
+        var headers = createEventRequestHeader()
         
         networkService.request(url: url,
                                method: .get,
@@ -72,15 +83,9 @@ final class EventViewModel: ObservableObject {
             }
             return
         }
-        var headers = ["Content-Type": "application/json"]
         
-        if let token = SessionManager.shared.token {
-            headers["Authorization"] = "Bearer \(token)"
-            print("Token is set: \(token)")
-        } else {
-            print("Token is nil — no Authorization header added.")
-        }
-        
+        var headers = createEventRequestHeader()
+
         networkService.request(url: url,
                                method: .post,
                                headers: headers,
@@ -120,13 +125,8 @@ final class EventViewModel: ObservableObject {
             }
         
         
-        var headers = [String: String]()
-        if let token = SessionManager.shared.token {
-            headers["Authorization"] = "Bearer \(token)"
-            print("Token is set: \(token)")
-        } else {
-            print("Token is nil — no Authorization header added.")
-        }
+        var headers = createEventRequestHeader()
+
         // DEBUG PRINTS
         print("\n🔵 GET EVENTS REQUEST:")
         print("URL: \(url.absoluteString)")
@@ -164,13 +164,9 @@ final class EventViewModel: ObservableObject {
             }
             return
         }
-        var headers = [String: String]()
-        if let token = SessionManager.shared.token {
-            headers["Authorization"] = "Bearer \(token)"
-            print("Token is set: \(token)")
-        } else {
-            print("Token is nil — no Authorization header added.")
-        }
+        
+        var headers = createEventRequestHeader()
+        
         // DEBUG PRINTS
         print("\nGet Next Event Request:")
         print("URL: \(url.absoluteString)")
@@ -201,14 +197,9 @@ final class EventViewModel: ObservableObject {
             }
             return
         }
-        var headers = [String: String]()
-        if let token = SessionManager.shared.token {
-            headers["Authorization"] = "Bearer \(token)"
-            print("Token is set: \(token)")
-        } else {
-            print("Token is nil — no Authorization header added.")
-        }
         
+        var headers = createEventRequestHeader()
+
         networkService.request(url: url,
                                method: .get,
                                headers: headers,
@@ -246,9 +237,9 @@ final class EventViewModel: ObservableObject {
             }
             return
         }
-        var headers = ["Content-Type": "application/json"]
-        if let token = token { headers["Authorization"] = "Bearer \(token)" }
         
+        var headers = createEventRequestHeader()
+
         networkService.request(url: url,
                                method: .put,
                                headers: headers,
@@ -273,13 +264,8 @@ final class EventViewModel: ObservableObject {
             }
             return
         }
-        var headers = [String: String]()
-        if let token = SessionManager.shared.token {
-            headers["Authorization"] = "Bearer \(token)"
-            print("Token is set: \(token)")
-        } else {
-            print("Token is nil — no Authorization header added.")
-        }
+        
+        var headers = createEventRequestHeader()
         
         networkService.request(url: url,
                                method: .delete,
@@ -312,9 +298,9 @@ final class EventViewModel: ObservableObject {
             }
             return
         }
-        var headers = ["Content-Type": "application/json"]
-        if let token = token { headers["Authorization"] = "Bearer \(token)" }
         
+        var headers = createEventRequestHeader()
+
         networkService.request(url: url,
                                method: .post,
                                headers: headers,
@@ -345,9 +331,9 @@ final class EventViewModel: ObservableObject {
             }
             return
         }
-        var headers = ["Content-Type": "application/json"]
-        if let token = token { headers["Authorization"] = "Bearer \(token)" }
         
+        var headers = createEventRequestHeader()
+
         networkService.request(url: url,
                                method: .post,
                                headers: headers,

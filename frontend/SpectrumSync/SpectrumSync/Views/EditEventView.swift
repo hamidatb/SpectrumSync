@@ -171,7 +171,7 @@ struct EditEventView: View {
              title: title,
              description: description,
              date: isoEventDate,
-             location: location,
+             location: location.trimmingCharacters(in: .whitespacesAndNewlines),
              withWho: withWhoList
          )
 
