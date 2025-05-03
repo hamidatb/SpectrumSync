@@ -24,7 +24,7 @@ struct EditEventView: View {
         _title = State(initialValue: event.title)
         _description = State(initialValue: event.description ?? "")
         _date = State(initialValue: event.date)
-        _location = State(initialValue: event.location)
+        _location = State(initialValue: event.location ?? "")
         _withWhoList = State(initialValue: event.withWho ?? [])
     }
 

@@ -7,7 +7,7 @@ struct Event: Codable, Identifiable, Hashable {
     let title: String
     let description: String?
     let date: Date
-    let location: String
+    let location: String?
     let userId: Int
     let createdAt: Date?
     let withWho: [String]?

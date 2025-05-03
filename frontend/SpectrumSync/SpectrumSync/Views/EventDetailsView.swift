@@ -45,7 +45,11 @@ struct EventDetailsView: View {
                 .overlay(
                     VStack(alignment: .leading, spacing: 20) {
                         detailRow(label: "📝 What:", value: event.title)
-                        detailRow(label: "📍 Where:", value: event.location)
+                        
+                        if let location = event.location, !location.isEmpty {
+
+                            detailRow(label: "📍 Where:", value: location)
+                        }
                         detailRow(label: "🕒 When:", value: event.date.formattedDateWithWeekday())
                         
                         if let with = event.withWho, !with.isEmpty {
