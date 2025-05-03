@@ -14,7 +14,7 @@ func isoDate(_ string: String) -> Date {
 extension Date {
     func formattedDateWithWeekday() -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE, MMM d" // e.g., "Tuesday, Apr 16"
+        formatter.dateFormat = "EEEE, MMM d 'at' h:mm a"
         return formatter.string(from: self)
     }
 }
