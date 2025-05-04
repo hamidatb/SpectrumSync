@@ -55,6 +55,9 @@ struct AllEventsView: View {
                EventDetailsView(event: event) // go to the detail view if an event was selected
            }
         }
+        .onAppear{
+            eventVM.getEvents()
+        }
     }
 }
 // MARK: - Preview Provider
