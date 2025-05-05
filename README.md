@@ -1,12 +1,11 @@
 # Spectrum Sync 🌟
 
-<img src="./FigmaDesigns/LogoWhite.png" alt="Spectrum Sync Logo" width="300" />
-
-
-## About Spectrum Sync 🧩
+## About 🧩
 ![Welcome Screen](./FigmaDesigns/WelcomeTo.png)
 
 **Spectrum Sync** is a mobile app designed to support individuals on the autism spectrum by streamlining communication and organization for families and caregivers. Stay connected, manage schedules, and enhance collaboration effortlessly. 💙
+
+Backend API: https://github.com/hamidatb/SpectrumSync-API
 
 #### April 2025 Demo
 https://github.com/user-attachments/assets/8ffbabd3-42fa-4daf-9a05-9dd72ddad97c
